@@ -1,6 +1,7 @@
 import { RouteType } from "./config";
 import Folder from '@mui/icons-material/Folder';
 import Person from '@mui/icons-material/Person';
+import Settings from '@mui/icons-material/Settings';
 import Home from "../pages/home/Home";
 import Diretorio from "../pages/diretorios/Diretorio";
 import Usuario from "../pages/usuarios/Usuario";
@@ -8,11 +9,7 @@ import Usuario from "../pages/usuarios/Usuario";
 const appRoutes: RouteType[] = [
   {
     index: true,
-    element: <Home />,
-    state: "home"
-  },
-  {
-    path: "/diretorios",
+    path: "/",
     element: <Diretorio />,
     state: "diretorios",
     sidebarProps: {
@@ -20,7 +17,7 @@ const appRoutes: RouteType[] = [
       icon: <Folder />
     }
   },
-  {
+  /*{
     path: "/usuarios",
     element: <Usuario />,
     state: "usuarios",
@@ -28,92 +25,45 @@ const appRoutes: RouteType[] = [
       displayText: "Usuários",
       icon: <Person />
     }
-  },
-  /*{
-    path: "/dashboard",
-    element: <DashboardPageLayout />,
-    state: "dashboard",
+  },*/
+  {
+    path: "/",
+    element: <Diretorio />,
+    state: "diretorios.configuracoes",
     sidebarProps: {
-      displayText: "Dashboard",
-      icon: <DashboardOutlinedIcon />
+      displayText: "Configurações",
+      icon: <Settings />
     },
     child: [
       {
+        path: "/",
         index: true,
-        element: <DashboardIndex />,
-        state: "dashboard.index"
+        element: <Diretorio />,
+        state: "diretorios.configuracoes.conta",
+        sidebarProps: {
+          displayText: "Conta"
+        },
       },
       {
-        path: "/dashboard/default",
-        element: <DefaultPage />,
+        path: "/",
+        index: true,
+        element: <Diretorio />,
+        state: "dashboard.configuracoes.gateways",
+        sidebarProps: {
+          displayText: "Gateways"
+        },
+      },
+      {
+        path: "/",
+        index: true,
+        element: <Diretorio />,
         state: "dashboard.default",
         sidebarProps: {
-          displayText: "Default"
+          displayText: "Sair"
         },
       },
-      {
-        path: "/dashboard/analytics",
-        element: <AnalyticsPage />,
-        state: "dashboard.analytics",
-        sidebarProps: {
-          displayText: "Analytic"
-        }
-      },
-      {
-        path: "/dashboard/saas",
-        element: <SaasPage />,
-        state: "dashboard.saas",
-        sidebarProps: {
-          displayText: "Saas"
-        }
-      }
     ]
-  },
-  {
-    path: "/component",
-    element: <ComponentPageLayout />,
-    state: "component",
-    sidebarProps: {
-      displayText: "Components",
-      icon: <AppsOutlinedIcon />
-    },
-    child: [
-      {
-        path: "/component/alert",
-        element: <AlertPage />,
-        state: "component.alert",
-        sidebarProps: {
-          displayText: "Alert"
-        },
-      },
-      {
-        path: "/component/button",
-        element: <ButtonPage />,
-        state: "component.button",
-        sidebarProps: {
-          displayText: "Button"
-        }
-      }
-    ]
-  },
-  {
-    path: "/documentation",
-    element: <DocumentationPage />,
-    state: "documentation",
-    sidebarProps: {
-      displayText: "Documentation",
-      icon: <ArticleOutlinedIcon />
-    }
-  },
-  {
-    path: "/changelog",
-    element: <ChangelogPage />,
-    state: "changelog",
-    sidebarProps: {
-      displayText: "Changelog",
-      icon: <FormatListBulletedOutlinedIcon />
-    }
-  }*/
+  }
 ];
 
 export default appRoutes;

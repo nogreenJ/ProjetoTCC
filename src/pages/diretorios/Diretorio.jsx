@@ -6,16 +6,12 @@ import {
 }
     from '../../servicos/DiretorioServico';
 import Tabela from "./Tabela";
-import Form from "./Form";
 import Carregando from "../../components/common/Carregando";
 import WithAuth from "../../seguranca/WithAuth";
 import { getUsuario } from "../../seguranca/Autenticacao";
 import { useNavigate } from "react-router-dom";
-import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import FolderIcon from '@mui/icons-material/Folder';
-import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import DiretorioItem from "./arvore/DiretorioItem";
+import { DiretorioAddItem } from "./arvore/DiretorioItem";
 
 
 function Diretorio() {
@@ -47,50 +43,13 @@ function Diretorio() {
             .map(obj => {
                 const children = getTreeItemsFromData(obj.codigo);
                 const item = (
-                    <TreeItem
-                        key={obj.codigo + ''}
-                        nodeId={obj.codigo + ''}
-                        label={
-                            <div onClick={event => event.stopPropagation()}>
-                                <div><FolderIcon />
-                                    {obj.nome}
-                                    <button className="btn"
-                                        onClick={() => editarObjeto(obj.codigo)}
-                                        data-bs-toggle="modal" data-bs-target="#modalEdicao">
-                                        <BorderColorOutlinedIcon />
-                                    </button>
-                                    <button className="btn" title="Remover"
-                                        onClick={() => { remover(obj.codigo); }}>
-                                        <DeleteOutlineOutlinedIcon />
-                                    </button>
-                                </div>
-                            </div>
-                        }
-                        children={children}
-                    >
-                    </TreeItem>
+                    <DiretorioItem obj={obj} children={children} />
                 );
                 return item;
             })
 
-        list.push(
-            (
-                <TreeItem
-                    key=""
-                    nodeId={"new_sub_" + (prentId ? prentId : '')}
-                    label={
-                        <div onClick={event => event.stopPropagation()}>
-                            <button type="button" className="btn"
-                                data-bs-toggle="modal" data-bs-target="#modalEdicao"
-                                onClick={() => novoObjeto(prentId)}>
-                                <CreateNewFolderOutlinedIcon />
-                            </button>
-                        </div>
-                    }
-                >
-                </TreeItem>
-            )
-        );
+        const parentId = (prentId ? prentId : '');
+        list.push((<DiretorioAddItem parentId={parentId} />));
 
         return list;
     };
@@ -177,11 +136,10 @@ function Diretorio() {
             objeto, editar, acaoCadastrar, getListaObjetosSemSelf, getListFromData,
             getTreeItemsFromData, handleChange, novoObjeto, editarObjeto
         }}>
+
             <Carregando carregando={carregando}>
                 <Tabela />
             </Carregando>
-
-            <Form />
         </DiretorioContext.Provider>
     )
 }

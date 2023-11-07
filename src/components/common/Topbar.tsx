@@ -1,6 +1,7 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import colorConfigs from "../../configs/colorConfigs";
 import sizeConfigs from "../../configs/sizeConfigs";
+import CampoSelect from '../../components/common/CampoSelect';
 
 const Topbar = () => {
   return (
@@ -16,8 +17,14 @@ const Topbar = () => {
     >
       <Toolbar>
         <Typography variant="h6">
-          React sidebar with dropdown
+          Nome Aplicação
         </Typography>
+        <CampoSelect id="gateway" name="gateway"
+          sx={{ alignSelf: 'flex-end' }}>
+          <option key="" value="">
+            Sem Gateway
+          </option>
+        </CampoSelect>
       </Toolbar>
     </AppBar>
   );
