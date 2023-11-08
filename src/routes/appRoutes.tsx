@@ -2,9 +2,10 @@ import { RouteType } from "./config";
 import Folder from '@mui/icons-material/Folder';
 import Person from '@mui/icons-material/Person';
 import Settings from '@mui/icons-material/Settings';
-import Home from "../pages/home/Home";
 import Diretorio from "../pages/diretorios/Diretorio";
 import Usuario from "../pages/usuarios/Usuario";
+import { Logout } from "../pages/login/Login"
+import MainLayout from "../components/layout/MainLayout";
 
 const appRoutes: RouteType[] = [
   {
@@ -55,9 +56,8 @@ const appRoutes: RouteType[] = [
       },
       {
         path: "/",
-        index: true,
-        element: <Diretorio />,
-        state: "dashboard.default",
+        element: <Logout />,
+        state: "",
         sidebarProps: {
           displayText: "Sair"
         },

@@ -31,11 +31,12 @@ function Tabela() {
     const { alerta, listaObjetos, remover, novoObjeto, editarObjeto, getTreeItemsFromData, getListFromData } = useContext(DiretorioContext);
 
     return (
-        <div style={{ padding: '20px' }}>
+        <div style={{ marginTop: '-16px' }}>
             <Alerta alerta={alerta} />
             {listaObjetos.length === 0 && <h1>Nenhum diretório encontrado</h1>}
             {listaObjetos.length > 0 && (
                 <TreeView
+                    key="keyRoot"
                     aria-label="file system navigator"
                     defaultCollapseIcon={<ExpandMoreIcon />}
                     defaultExpandIcon={<ChevronRightIcon />}
@@ -47,14 +48,6 @@ function Tabela() {
             )}
         </div>
     )
-    /*
-    
-            <button type="button" className="btn btn-primary"
-                data-bs-toggle="modal" data-bs-target="#modalEdicao"
-                onClick={() => novoObjeto()}>
-                <i className="bi bi-folder-plus"></i>
-            </button>
-    */
 }
 
 export default Tabela;

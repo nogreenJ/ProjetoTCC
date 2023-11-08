@@ -4,35 +4,42 @@ import colorConfigs from "../../configs/colorConfigs";
 import sizeConfigs from "../../configs/sizeConfigs";
 import Sidebar from "../common/Sidebar";
 import Topbar from "../common/Topbar";
+import { getToken } from "../../seguranca/Autenticacao";
+import Login from "../../pages/login/Login";
 
 const MainLayout = () => {
-  return (
-    <Box sx={{ display: "flex" }}>
-      <Topbar />
-      <Box
-        component="nav"
-        sx={{
-          width: sizeConfigs.sidebar.width,
-          flexShrink: 0
-        }}
-      >
-        <Sidebar />
+  if (getToken() != null) {
+    return (
+      <Box sx={{ display: "flex" }}>
+        <Topbar />
+        <Box
+          component="nav"
+          sx={{
+            width: sizeConfigs.sidebar.width,
+            flexShrink: 0
+          }}
+        >
+          <Sidebar />
+        </Box>
+        <Box
+          component="main"
+          sx={{
+            flexGrow: 1,
+            p: 3,
+            width: `calc(100% - ${sizeConfigs.sidebar.width})`,
+            minHeight: "100vh",
+            backgroundColor: colorConfigs.mainBg
+          }}
+        >
+          <Toolbar />
+          <Outlet />
+        </Box>
       </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: 3,
-          width: `calc(100% - ${sizeConfigs.sidebar.width})`,
-          minHeight: "100vh",
-          backgroundColor: colorConfigs.mainBg
-        }}
-      >
-        <Toolbar />
-        <Outlet />
-      </Box>
-    </Box>
-  );
+    );
+  }
+  else {
+    return (<Login />);
+  }
 };
 
 export default MainLayout;

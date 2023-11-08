@@ -47,7 +47,7 @@ export const gravaAutenticacao = (json) => {
     localStorage.setItem(NOMEAPP + '/autenticacao', JSON.stringify(json));
 }
 
-export const logout = (json) => {
+export const logout = () => {
+    console.log('logout')
     localStorage.setItem(NOMEAPP + '/autenticacao', JSON.stringify({ auth: false, token: "" }));
-    window.location.reload();
 }

@@ -32,12 +32,13 @@ function Diretorio() {
 
     const getListaObjetosSemSelf = () => {
         const newArr = listaObjetos.filter(obj => {
-            return obj.codigo !== objeto.codigo;
+            return (obj && objeto) && (obj.codigo !== objeto.codigo);
         });
         return newArr
     }
 
     const getTreeItemsFromData = (prentId) => {
+        console.log(listaObjetos.filter(obj => !prentId ? obj.parent === "" || !obj.parent : obj.parent === prentId))
         let list = listaObjetos
             .filter(obj => !prentId ? obj.parent === "" || !obj.parent : obj.parent === prentId)
             .map(obj => {

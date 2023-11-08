@@ -35,7 +35,7 @@ export default function Form({ parent }) {
     parent = parent ? parent : (objeto ? objeto.parent : "");
 
     return (
-        <div>
+        <div style={{ marginLeft: '-20px' }}>
             <Button onClick={handleOpen}><CreateNewFolderOutlinedIcon /></Button>
             <Modal
                 open={open}

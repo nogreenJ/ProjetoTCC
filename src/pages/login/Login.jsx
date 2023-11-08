@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import { Navigate } from "react-router-dom";
-import { gravaAutenticacao, getToken } from "../../seguranca/Autenticacao";
+import { gravaAutenticacao, getToken, logout } from "../../seguranca/Autenticacao";
 import Carregando from "../../components/common/Carregando";
 import Alerta from "../../components/common/Alerta";
 import './signin.css';
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
+import MainLayout from "../../components/layout/MainLayout";
 
 function Login() {
 
@@ -36,7 +36,7 @@ function Login() {
                     } else {
                         setAutenticado(true);
                         gravaAutenticacao(json);
-                        navigate("/", { replace: true });
+                        //navigate("/", { replace: true });
                     }
                 })
         } catch (err) {
@@ -48,24 +48,21 @@ function Login() {
 
     useEffect(() => {
         try {
-            const token = getToken();
-            if (token != null) {
-                setAutenticado(true);
-            }
+            setAutenticado(getToken() != null);
         } catch (err) {
             setAlerta({ status: "error", message: err });
         }
-    })
+    }, [])
 
     if (autenticado === true) {
-        return <Navigate to="/" />
+        return <MainLayout />
     }
 
     return (
         <div>
             <Carregando carregando={carregando}>
                 <div>
-                    <body className="text-center">
+                    <div className="text-center">
                         <Alerta alerta={alerta} />
                         <main className="form-signin">
                             <form onSubmit={acaoLogin}>
@@ -88,11 +85,16 @@ function Login() {
                                 <button className="w-100 btn btn-lg btn-primary" type="submit">Efetuar login</button>
                             </form>
                         </main>
-                    </body>
+                    </div>
                 </div>
             </Carregando>
         </div>
     )
+}
+
+export function Logout() {
+    logout();
+    return <Navigate to="/" />
 }
 
 export default Login;

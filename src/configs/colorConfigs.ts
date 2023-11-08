@@ -1,6 +1,14 @@
 import { colors } from "@mui/material";
 
 const colorConfigs = {
+  pallette: {
+    primaria: '#233044',
+    secundaria: '',
+    terciaria: '',
+    quarta: '#e8eaf6',
+    quinta: '',
+    sexta: '#ffffff',
+  },
   sidebar: {
     bg: "#233044",
     color: "#eeeeee",
