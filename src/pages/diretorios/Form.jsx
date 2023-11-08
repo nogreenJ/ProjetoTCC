@@ -10,6 +10,9 @@ import Button from '@mui/material/Button';
 import * as React from 'react';
 import Dialogo from '../../components/common/Dialogo';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
+import 'bootstrap/dist/css/bootstrap.min.css'
+import '@popperjs/core/dist/cjs/popper.js'
+import 'bootstrap/dist/js/bootstrap.min.js'
 
 
 const style = {
