@@ -30,6 +30,17 @@ function Diretorio() {
         setObjeto({ codigo: 0, nome: "", parent: (parentId ? parentId : ""), usuario: getUsuario().codigo });
     }
 
+    const editarObjeto = async codigo => {
+        try {
+            setEditar(true);
+            setAlerta({ status: "", message: "" });
+            setObjeto(await getDiretorioServicoPorCodigoAPI(codigo));
+        } catch (err) {
+            window.location.reload();
+            navigate("/", { replace: true });
+        }
+    }
+
     const getListaObjetosSemSelf = () => {
         const newArr = listaObjetos.filter(obj => {
             return (obj && objeto) && (obj.codigo !== objeto.codigo);
@@ -38,7 +49,6 @@ function Diretorio() {
     }
 
     const getTreeItemsFromData = (prentId) => {
-        console.log(listaObjetos.filter(obj => !prentId ? obj.parent === "" || !obj.parent : obj.parent === prentId))
         let list = listaObjetos
             .filter(obj => !prentId ? obj.parent === "" || !obj.parent : obj.parent === prentId)
             .map(obj => {
@@ -61,23 +71,10 @@ function Diretorio() {
             .map(obj => { obj.children = getListFromData(obj.codigo); return obj; });
     };
 
-    const editarObjeto = async codigo => {
-        try {
-            setEditar(true);
-            setAlerta({ status: "", message: "" });
-            setObjeto(await getDiretorioServicoPorCodigoAPI(codigo));
-        } catch (err) {
-            window.location.reload();
-            navigate("/", { replace: true });
-        }
-    }
-
     const acaoCadastrar = async e => {
         e.preventDefault();
         const metodo = editar ? "PUT" : "POST";
         try {
-            console.log(editar)
-            console.log(objeto)
             let retornoAPI = await cadastraDiretorioServico(objeto, metodo);
             setAlerta({
                 status: retornoAPI.status,

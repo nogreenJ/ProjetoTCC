@@ -5,8 +5,8 @@ import appRoutes from "./appRoutes";
 import { RouteType } from "./config";
 
 const generateRoute = (routes: RouteType[]): ReactNode => {
-  return routes.map((route, index) => (
-    route.index ? (
+  return routes.map((route, index) => {
+    return route.index ? (
       <Route
         index
         path={route.path}
@@ -30,7 +30,7 @@ const generateRoute = (routes: RouteType[]): ReactNode => {
         )}
       </Route>
     )
-  ));
+  });
 };
 
 export const routes: ReactNode = generateRoute(appRoutes);

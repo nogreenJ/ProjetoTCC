@@ -1,7 +1,8 @@
 import { RouteType } from "./config";
 import Folder from '@mui/icons-material/Folder';
-import Settings from '@mui/icons-material/Settings';
+import Person from '@mui/icons-material/Person';
 import Diretorio from "../pages/diretorios/Diretorio";
+import Configuracoes from "../pages/configuracoes/Configuracoes";
 
 const appRoutes: RouteType[] = [
   {
@@ -14,6 +15,16 @@ const appRoutes: RouteType[] = [
       icon: <Folder />
     }
   },
+  {
+    index: true,
+    path: "/config",
+    element: <Configuracoes />,
+    state: "configuracoes",
+    sidebarProps: {
+      displayText: "Conta",
+      icon: <Person />
+    },
+  },
   /*{
     path: "/usuarios",
     element: <Usuario />,
@@ -22,45 +33,27 @@ const appRoutes: RouteType[] = [
       displayText: "Usuários",
       icon: <Person />
     }
-  },*/
+  },
   {
-    path: "/",
-    element: <Diretorio />,
-    state: "diretorios.configuracoes",
+    path: "/config",
+    element: <Configuracoes />,
+    state: "configuracoes",
     sidebarProps: {
       displayText: "Configurações",
       icon: <Settings />
     },
     child: [
       {
-        path: "/",
         index: true,
-        element: <Diretorio />,
-        state: "diretorios.configuracoes.conta",
-        sidebarProps: {
-          displayText: "Conta"
-        },
-      },
-      {
-        path: "/",
-        index: true,
-        element: <Diretorio />,
-        state: "dashboard.configuracoes.gateways",
+        path: "/config",
+        element: <Configuracoes />,
+        state: "configuracoes.gateways",
         sidebarProps: {
           displayText: "Gateways"
         },
       },
-      {
-        path: "/",
-        index: true,
-        element: <Diretorio />,
-        state: "",
-        sidebarProps: {
-          displayText: "Sair"
-        },
-      },
     ]
-  }
+  }*/
 ];
 
 export default appRoutes;

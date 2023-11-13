@@ -5,6 +5,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Dialogo from '../../components/common/Dialogo';
+import CampoEntrada from '../../components/common/CampoEntrada';
 
 const theme = createTheme({
     components: {

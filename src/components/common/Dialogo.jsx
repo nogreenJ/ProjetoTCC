@@ -1,3 +1,5 @@
+import Button from '@mui/material/Button';
+
 function Dialogo(props) {
 
     // Example starter JavaScript for disabling form submissions if there are invalid fields
@@ -32,10 +34,10 @@ function Dialogo(props) {
                             {props.children}
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                            <button type="submit" className="btn btn-success" >
-                                Salvar  <i className="bi bi-save"></i>
-                            </button>
+                            <Button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Fechar</Button>
+                            <Button type="submit" className="btn btn-success" >
+                                <i className="bi bi-save" /> Salvar
+                            </Button>
                         </div>
                     </form>
                 </div>
