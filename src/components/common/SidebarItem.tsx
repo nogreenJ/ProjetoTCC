@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import colorConfigs from "../../configs/colorConfigs";
 import { RootState } from "../../redux/store";
 import { RouteType } from "../../routes/config";
+import { useEffect } from "react";
 
 type Props = {
   item: RouteType;
@@ -11,6 +12,12 @@ type Props = {
 
 const SidebarItem = ({ item }: Props) => {
   const { appState } = useSelector((state: RootState) => state.appState);
+
+  useEffect(() => {
+    const modalBd = document.getElementsByClassName('modal-backdrop')[0];
+    if (modalBd)
+      modalBd.remove();
+  });
 
   return (
     item.sidebarProps && item.path ? (

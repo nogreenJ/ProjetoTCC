@@ -94,6 +94,9 @@ function Login() {
         return <MainLayout />
     }
 
+    const labelStyle = { justifyContent: 'right', display: 'flex', padding: '6px 6px 0 0', width: '20%' };
+    const inputStyle = { justifyContent: 'right', display: 'flex', width: '80%' };
+
     return (
         <div>
             <Carregando carregando={carregando}>
@@ -101,47 +104,57 @@ function Login() {
                     <div className="text-center">
                         <Alerta alerta={alerta} />
                         <main className="form-signin">
-                            <form onSubmit={acaoLogin}>
+                            <form onSubmit={acaoLogin} style={{ width: 300, marginLeft: 30 }}>
                                 <h1 className="h3 mb-3 fw-normal">{isCadastro ? "Cadastrar" : "Entrar"}</h1>
 
                                 {isCadastro && <div className="form-floating">
-                                    <label htmlFor="floatingInput">Nome</label>
-                                    <input type="text" className="form-control" id="floatingInput" placeholder="Nome de usuário"
-                                        value={nome}
-                                        name="nome"
-                                        onChange={e => setNome(e.target.value)} />
+                                    <div className="form-group" style={{ marginBottom: 5 }}>
+                                        <span style={{ display: 'flex' }}>
+                                            <label className="form-label" style={labelStyle}>Nome</label>
+                                            <input type="text" className="form-control" id="floatingInput" placeholder="Nome de usuário"
+                                                value={nome}
+                                                name="nome" style={inputStyle}
+                                                onChange={e => setNome(e.target.value)} />
+                                        </span>
+                                    </div>
                                 </div>}
-                                <div className="form-floating">
-                                    <input type="text" className="form-control" id="floatingInput" placeholder="Email"
-                                        value={email}
-                                        name="email"
-                                        onChange={e => setEmail(e.target.value)} />
-                                    <label htmlFor="floatingInput">Email</label>
+                                <div className="form-group" style={{ marginBottom: 5 }}>
+                                    <span style={{ display: 'flex' }}>
+                                        <label className="form-label" style={labelStyle}>Email</label>
+                                        <input type="text" className="form-control" id="floatingInput" placeholder="Email"
+                                            value={email}
+                                            name="email" style={inputStyle}
+                                            onChange={e => setEmail(e.target.value)} />
+                                    </span>
                                 </div>
-                                <div className="form-floating">
-                                    <label htmlFor="floatingPassword">Senha</label>
-                                    <input type="password" className="form-control" id="floatingPassword" placeholder="Senha"
-                                        value={senha}
-                                        name="senha"
-                                        onChange={e => setSenha(e.target.value)} />
+                                <div className="form-group" style={{ marginBottom: 5 }}>
+                                    <span style={{ display: 'flex' }}>
+                                        <label className="form-label" style={labelStyle}>Senha</label>
+                                        <input type="password" className="form-control" id="floatingPassword" placeholder="Senha"
+                                            value={senha}
+                                            name="senha" style={inputStyle}
+                                            onChange={e => setSenha(e.target.value)} />
+                                    </span>
                                 </div>
-                                {!isCadastro &&
-                                    <button className="w-100 btn btn-lg btn-primary" type="submit">
-                                        Entrar
+                                <div className="form-group">
+                                    {!isCadastro &&
+                                        <button className="w-50 btn btn-lg btn-primary" type="submit">
+                                            Entrar
+                                        </button>
+                                    }
+                                    {isCadastro &&
+                                        <button className="w-50 btn btn-md btn-primary" type="button"
+                                            onClick={() => acaoCadastro()} >
+                                            Cadastrar
+                                        </button>
+                                    }
+                                    <br />
+                                    <button className="w-75 btn btn-md btn-secondary"
+                                        style={{ marginTop: 3 }}
+                                        onClick={() => changeAcao()} type="button">
+                                        {isCadastro ? "Já possui uma conta?" : "Não possui uma conta?"}
                                     </button>
-                                }
-                                {isCadastro &&
-                                    <button className="w-100 btn btn-lg btn-primary" type="button"
-                                        onClick={() => acaoCadastro()} >
-                                        Cadastrar
-                                    </button>
-                                }
-                                <br />
-                                <button className="w-100 btn btn-lg btn-secondary"
-                                    sx={{ marginTop: 10 }}
-                                    onClick={() => changeAcao()} type="button">
-                                    {isCadastro ? "Já possui uma conta?" : "Não possui uma conta?"}
-                                </button>
+                                </div>
                             </form>
                         </main>
                     </div>

@@ -41,7 +41,7 @@ const Topbar = () => {
         </Typography>
         {appState === 'diretorios' && (
           <select
-            className="form-control"
+            className="form-select"
             id="gateway"
             name="gateway"
             style={{ width: 200, marginLeft: 'auto', marginRight: 0 }}>

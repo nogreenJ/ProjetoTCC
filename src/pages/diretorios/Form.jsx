@@ -2,14 +2,8 @@ import { useContext } from 'react'
 import Alerta from '../../components/common/Alerta';
 import DiretorioContext from './DiretorioContext';
 import CampoEntrada from '../../components/common/CampoEntrada';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Fade from '@mui/material/Fade';
 import CampoSelect from '../../components/common/CampoSelect';
-import Button from '@mui/material/Button';
-import * as React from 'react';
 import Dialogo from '../../components/common/Dialogo';
-import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@popperjs/core/dist/cjs/popper.js'
 import 'bootstrap/dist/js/bootstrap.min.js'
@@ -29,44 +23,45 @@ const style = {
 
 export default function Form({ parent }) {
 
-    const { objeto, novoObjeto, handleChange, acaoCadastrar, alerta, getListaObjetosSemSelf } = useContext(DiretorioContext);
+    const { objeto, handleChange, acaoCadastrar, alerta, getListaObjetosSemSelf } = useContext(DiretorioContext);
 
     parent = parent ? parent : (objeto ? objeto.parent : "");
 
     return (
         <div style={{ marginLeft: '-20px' }}>
-            <Button onClick={() => novoObjeto(parent)}><CreateNewFolderOutlinedIcon /></Button>
             <Dialogo id="modalEdicao" titulo="Diretorio" idformulario="formEdicao"
                 acaoCadastrar={acaoCadastrar} modal={true}>
                 <Alerta alerta={alerta} />
-                <CampoEntrada id="txtCodigo" label="Código" tipo="number"
-                    name="codigo" value={objeto ? objeto.codigo : 0}
-                    handlechange={handleChange}
-                    requerido={false} readonly={true}
-                    maximocaracteres={5} />
-                <CampoEntrada id="txtNome" label="Nome" tipo="text"
-                    name="nome" value={objeto ? objeto.nome : ''}
-                    handlechange={handleChange}
-                    requerido={true} readonly={false}
-                    textovalido="Nome OK" textoinvalido="Informe o nome"
-                    maximocaracteres={40} />
-                <CampoSelect id="txtParent" label="Dir. Pai"
-                    name="parent" value={parent}
-                    handlechange={handleChange}
-                    requerido={false}
-                    textovalido="Dir. Pai OK">
-                    <option key="" value="">
-                        Sem Dir. Pai
-                    </option>
-                    {
+                <div>
+                    <CampoEntrada id="txtCodigo" label="Código" tipo="number"
+                        name="codigo" value={objeto ? objeto.codigo : 0}
+                        handlechange={handleChange}
+                        requerido={false} readonly={true}
+                        maximocaracteres={5} classes="w-25" />
+                    <CampoEntrada id="txtNome" label="Nome" tipo="text"
+                        name="nome" value={objeto ? objeto.nome : ''}
+                        handlechange={handleChange}
+                        requerido={true} readonly={false}
+                        textovalido="Nome OK" textoinvalido="Informe o nome"
+                        maximocaracteres={40} classes="w-50" />
+                    <CampoSelect id="txtParent" label="Dir. Pai"
+                        name="parent" value={parent}
+                        handlechange={handleChange}
+                        requerido={false} classes="w-50"
+                        textovalido="Dir. Pai OK">
+                        <option key="" value="">
+                            Sem Dir. Pai
+                        </option>
+                        {
 
-                        getListaObjetosSemSelf().map((cat) => (
-                            <option key={cat.codigo} value={cat.codigo}>
-                                {cat.nome}
-                            </option>
-                        ))
-                    }
-                </CampoSelect>
+                            getListaObjetosSemSelf().map((cat) => (
+                                <option key={cat.codigo} value={cat.codigo}>
+                                    {cat.nome}
+                                </option>
+                            ))
+                        }
+                    </CampoSelect>
+                </div>
             </Dialogo>
         </div>
     )

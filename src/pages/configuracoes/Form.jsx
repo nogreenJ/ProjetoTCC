@@ -35,29 +35,30 @@ function Form() {
                 <CampoEntrada id="txtCodigo" label="Código" tipo="number"
                     name="codigo" value={objeto ? objeto.codigo : 0}
                     requerido={false} readonly={true} handlechange={handleChange}
-                    maximocaracteres={5} />
+                    maximocaracteres={5} classes="w-25" />
                 <CampoEntrada id="txtEmail" label="Email" tipo="text"
                     name="email" value={objeto ? objeto.email : ''}
                     requerido={true} readonly={true} handlechange={handleChange}
                     textovalido="Email OK" textoinvalido="Informe o email"
-                    maximocaracteres={40} />
+                    maximocaracteres={40} classes="w-50" />
                 <CampoEntrada id="txtNome" label="Nome" tipo="text"
                     name="nome" value={objeto ? objeto.nome : ''}
                     requerido={true} readonly={false} handlechange={handleChange}
                     textovalido="Nome OK" textoinvalido="Informe o nome"
-                    maximocaracteres={40} />
+                    maximocaracteres={40} classes="w-50" />
                 <CampoEntrada id="txtSenha" label="Senha" tipo="text"
                     name="senha" value={objeto ? objeto.senha : ''}
                     requerido={true} readonly={false} handlechange={handleChange}
                     textovalido="Senha OK" textoinvalido="Informe a senha"
-                    maximocaracteres={40} />
-                <Button type="submit">
-                    Salvar
-                </Button>
-                <br />
-                <Button onClick={() => sair()}>
-                    Sair
-                </Button>
+                    maximocaracteres={40} classes="w-50" />
+                <div className="w-50" style={{ textAlign: 'center' }}>
+                    <Button type="submit" className="w-25 btn btn-lg btn-outline-primary text-primary">
+                        Salvar
+                    </Button>
+                    <Button onClick={() => sair()} className="w-25 btn btn-lg btn-outline-danger text-danger">
+                        Sair
+                    </Button>
+                </div>
             </form>
         </div>
     )

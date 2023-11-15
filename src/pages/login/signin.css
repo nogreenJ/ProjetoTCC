@@ -1,8 +1,11 @@
 .form-signin {
   width: 100%;
-  max-width: 330px;
-  padding: 15px;
+  max-width: 400px;
+  padding: 20px;
   margin: auto;
+  border: 1px lightgray solid;
+  border-radius: 10px;
+  transform: translateY(55%);
 }
 
 .form-signin .checkbox {
@@ -21,6 +24,4 @@
 
 .form-signin input[type="password"] {
   margin-bottom: 10px;
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
 }

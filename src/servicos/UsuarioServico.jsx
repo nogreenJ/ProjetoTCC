@@ -44,6 +44,7 @@ export const deleteUsuarioServico = async codigo => {
 
 
 export const cadastraUsuarioServico = async (objeto, metodo) => {
+    console.log(objeto)
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/usuario`, {
         method: metodo,
         headers: {

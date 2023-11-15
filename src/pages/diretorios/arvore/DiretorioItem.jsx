@@ -8,6 +8,7 @@ import Form from "../Form";
 import { styled } from "@mui/material/styles";
 import Button from '@mui/material/Button';
 import colorConfigs from "../../../configs/colorConfigs";
+import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
 
 const ItemArvorePai = styled(TreeItem)(({ theme }) => ({
     [`& .${treeItemClasses.content}, .${treeItemClasses.content}`]: {
@@ -60,10 +61,10 @@ const ItemArvoreAddRoot = styled(TreeItem)(({ theme }) => ({
 }));
 
 export function DiretorioAddItem({ parentId }) {
-
+    const { novoObjeto } = useContext(DiretorioContext);
     return (
         <ItemArvoreAddRoot
-            key={parentId ? 99 + parentId : 0} label={<Form parent={parentId} />}
+            key={parentId ? 99 + parentId : 0} label={<Button onClick={() => novoObjeto(parentId)}><CreateNewFolderOutlinedIcon /></Button>}
             nodeId={(parentId ? 99 + parentId : 0) + ''}
         />
     )
@@ -78,12 +79,12 @@ export default function DiretorioItem({ obj, children }) {
             <FolderIcon sx={{ margin: '0 5px -6px 0' }} />
             {obj.nome}
             <span className="actionBtns">
-                <Button className="btn"
+                <Button className="btn btn-sm"
                     onClick={() => editarObjeto(obj.codigo)}
                     data-bs-toggle="modal" data-bs-target="#modalEdicao">
                     <BorderColorOutlinedIcon />
                 </Button>
-                <Button className="btn" title="Remover"
+                <Button className="btn btn-sm" title="Remover"
                     onClick={() => { remover(obj.codigo); }}>
                     <DeleteOutlineOutlinedIcon />
                 </Button>
@@ -103,7 +104,6 @@ export default function DiretorioItem({ obj, children }) {
     } else {
         return (
             <ItemArvore
-                key={obj.codigo}
                 nodeId={obj.codigo + ''}
                 label={label}
                 children={children}

@@ -21,7 +21,7 @@ function Dialogo(props) {
     })()
 
     return (
-        <div className="modal fade" id={props.id} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div className="modal fade modal-lg" id={props.id} tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ marginTop: 128 }}>
             <div className="modal-dialog">
                 <div className="modal-content">
                     <div className="modal-header">
@@ -33,10 +33,12 @@ function Dialogo(props) {
                         <div className="modal-body">
                             {props.children}
                         </div>
-                        <div className="modal-footer">
-                            <Button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Fechar</Button>
-                            <Button type="submit" className="btn btn-success" >
-                                <i className="bi bi-save" /> Salvar
+                        <div className="modal-footer" style={{ textAlign: 'center', display: 'block' }}>
+                            <Button type="submit" className="w-25 btn btn-lg btn-outline-primary text-primary">
+                                Salvar
+                            </Button>
+                            <Button type="button" className="w-25 btn btn-lg btn-outline-danger text-danger" data-bs-dismiss="modal">
+                                Fechar
                             </Button>
                         </div>
                     </form>

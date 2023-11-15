@@ -12,6 +12,7 @@ import { getUsuario } from "../../seguranca/Autenticacao";
 import { useNavigate } from "react-router-dom";
 import DiretorioItem from "./arvore/DiretorioItem";
 import { DiretorioAddItem } from "./arvore/DiretorioItem";
+import Form from "./Form";
 
 
 function Diretorio() {
@@ -138,6 +139,7 @@ function Diretorio() {
             <Carregando carregando={carregando}>
                 <Tabela />
             </Carregando>
+            <Form />
         </DiretorioContext.Provider>
     )
 }

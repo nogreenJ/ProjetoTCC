@@ -4,11 +4,11 @@ import { getToken } from "./Autenticacao";
 const WithAuth = (Component) => {
 
     const AuthRoute = () => {
-        const isAuth  = getToken() ? true : false;
+        const isAuth = getToken() ? true : false;
         if (isAuth) {
-            return <Component/>
+            return <Component />
         } else {
-            return <Navigate to="/login"/>;
+            return <Navigate to="/" />;
         }
     }
 
