@@ -6,6 +6,7 @@
   border: 1px lightgray solid;
   border-radius: 10px;
   transform: translateY(55%);
+  transform-origin: center;
 }
 
 .form-signin .checkbox {

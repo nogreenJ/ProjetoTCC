@@ -60,11 +60,18 @@ const ItemArvoreAddRoot = styled(TreeItem)(({ theme }) => ({
     },
 }));
 
+const btnStyle = {
+    minWidth: 0
+}
+
 export function DiretorioAddItem({ parentId }) {
     const { novoObjeto } = useContext(DiretorioContext);
     return (
         <ItemArvoreAddRoot
-            key={parentId ? 99 + parentId : 0} label={<Button onClick={() => novoObjeto(parentId)}><CreateNewFolderOutlinedIcon /></Button>}
+            key={parentId ? 99 + parentId : 0} label={
+                <Button onClick={() => novoObjeto(parentId)} sx={btnStyle}>
+                    <CreateNewFolderOutlinedIcon />
+                </Button>}
             nodeId={(parentId ? 99 + parentId : 0) + ''}
         />
     )
@@ -76,15 +83,15 @@ export default function DiretorioItem({ obj, children }) {
 
     const label = <div onClick={event => event.stopPropagation()}>
         <div>
-            <FolderIcon sx={{ margin: '0 5px -6px 0' }} />
+            <FolderIcon sx={{ margin: '-7px 5px -6px 0' }} />
             {obj.nome}
             <span className="actionBtns">
                 <Button className="btn btn-sm"
-                    onClick={() => editarObjeto(obj.codigo)}
+                    onClick={() => editarObjeto(obj.codigo)} sx={btnStyle}
                     data-bs-toggle="modal" data-bs-target="#modalEdicao">
                     <BorderColorOutlinedIcon />
                 </Button>
-                <Button className="btn btn-sm" title="Remover"
+                <Button className="btn btn-sm" title="Remover" sx={btnStyle}
                     onClick={() => { remover(obj.codigo); }}>
                     <DeleteOutlineOutlinedIcon />
                 </Button>
