@@ -21,7 +21,7 @@ const Alerta = ({ alerta }) => {
     return (
         <>
             {
-                (alerta.message.length > 0 && exibir) &&
+                exibir &&
                 <div className={classe} role="alert">
                     {alerta.message}
                 </div>

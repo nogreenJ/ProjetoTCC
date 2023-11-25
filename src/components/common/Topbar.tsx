@@ -18,6 +18,9 @@ const Topbar = () => {
       case 'configuracoes':
         setPage("Conta");
         break;
+      case 'servicos':
+        setPage("Serviços de Pinning");
+        break;
       default:
         setPage("Nome Aplicação");
         break;

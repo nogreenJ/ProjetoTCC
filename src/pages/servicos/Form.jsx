@@ -1,15 +1,15 @@
 import { useContext } from 'react'
 import Alerta from '../../components/common/Alerta';
-import UsuarioContext from './UsuarioContext';
+import ServicoContext from './ServicoContext';
 import CampoEntrada from '../../components/common/CampoEntrada';
 import Dialogo from '../../components/common/Dialogo';
 
 function Form() {
 
-    const { editar, objeto, handleChange, acaoCadastrar, alerta } = useContext(UsuarioContext);
+    const { editar, objeto, handleChange, acaoCadastrar, alerta } = useContext(ServicoContext);
 
     return (
-        <Dialogo id="modalEdicao" titulo="Usuario" idformulario="formEdicao"
+        <Dialogo id="modalEdicao" titulo="Serviço" idformulario="formEdicao"
             acaoCadastrar={acaoCadastrar}>
             <Alerta alerta={alerta} />
             <CampoEntrada id="txtCodigo" label="Código" tipo="number"
@@ -17,23 +17,23 @@ function Form() {
                 handlechange={handleChange}
                 requerido={false} readonly={true}
                 maximocaracteres={5} />
-            <CampoEntrada id="txtEmail" label="Email" tipo="text"
-                name="email" value={objeto ? objeto.email : ''}
-                handlechange={handleChange}
-                requerido={true} readonly={editar}
-                textovalido="Email OK" textoinvalido="Informe o Email"
-                maximocaracteres={40} />
             <CampoEntrada id="txtNome" label="Nome" tipo="text"
                 name="nome" value={objeto ? objeto.nome : ''}
                 handlechange={handleChange}
                 requerido={true} readonly={false}
                 textovalido="Nome OK" textoinvalido="Informe o nome"
                 maximocaracteres={40} />
-            <CampoEntrada id="txtSenha" label="Senha" tipo="password"
-                name="senha" value={objeto ? objeto.senha : ''}
+            <CampoEntrada id="txtEndpoint" label="Endpoint" tipo="text"
+                name="endpoint" value={objeto ? objeto.endpoint : ''}
                 handlechange={handleChange}
                 requerido={true} readonly={false}
-                textovalido="Senha OK" textoinvalido="Informe a Senha"
+                textovalido="Endpoint OK" textoinvalido="Informe o endpoint"
+                maximocaracteres={200} />
+            <CampoEntrada id="txtKey" label="Chave API" tipo="password"
+                name="key" value={objeto ? objeto.key : ''}
+                handlechange={handleChange}
+                requerido={true} readonly={false}
+                textovalido="Chave API OK" textoinvalido="Informe a Chave API"
                 maximocaracteres={40} />
         </Dialogo>
     )

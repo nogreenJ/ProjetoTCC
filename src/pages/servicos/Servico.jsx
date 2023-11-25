@@ -1,10 +1,10 @@
 import { useState, useEffect } from "react";
-import UsuarioContext from "./UsuarioContext";
+import ServicoContext from "./ServicoContext";
 import {
-    getUsuarioServico, getUsuarioServicoPorCodigoAPI,
-    deleteUsuarioServico, cadastraUsuarioServico
+    getServicoServico, getServicoServicoPorCodigoAPI,
+    deleteServicoServico, cadastraServicoServico
 }
-    from '../../servicos/UsuarioServico';
+    from '../../servicos/ServicoServico';
 import Tabela from "./Tabela";
 import Form from "./Form";
 import Carregando from "../../components/common/Carregando";
@@ -12,41 +12,27 @@ import WithAuth from "../../seguranca/WithAuth";
 import { useNavigate } from "react-router-dom";
 import { getUsuario } from "../../seguranca/Autenticacao";
 
-function Usuario() {
+function Servico() {
 
     let navigate = useNavigate();
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [editar, setEditar] = useState(false);
-    const [objeto, setObjeto] = useState({ codigo: "", nome: "", email: "", tipo: "", senha: "" });
+    const [objeto, setObjeto] = useState({ codigo: "", nome: "", endpoint: "", key: "", usuario: "" });
     const [carregando, setCarregando] = useState(false);
 
-    const isAdm = () => {
-        const tipo = getUsuario().tipo;
-        return tipo === 1 || tipo === "1";
-    }
-
-    const isOwnUser = (cod) => {
-        const codigo = getUsuario().codigo;
-        return codigo === cod;
-    }
-
     const novoObjeto = () => {
-        if (getUsuario().tipo !== 1) {
-            setAlerta({ status: "warning", message: "Apenas usuários administradores podem adicionar novos usuários" });
-            return;
-        }
         setEditar(false);
         setAlerta({ status: "", message: "" });
-        setObjeto({ codigo: 0, nome: "", email: "", tipo: 0, senha: "" });
+        setObjeto({ codigo: 0, nome: "", endpoint: "", key: "", usuario: getUsuario().codigo });
     }
 
     const editarObjeto = async codigo => {
         try {
             setEditar(true);
             setAlerta({ status: "", message: "" });
-            setObjeto(await getUsuarioServicoPorCodigoAPI(codigo));
+            setObjeto(await getServicoServicoPorCodigoAPI(codigo));
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
@@ -57,7 +43,7 @@ function Usuario() {
         e.preventDefault();
         const metodo = editar ? "PUT" : "POST";
         try {
-            let retornoAPI = await cadastraUsuarioServico(objeto, metodo);
+            let retornoAPI = await cadastraServicoServico(objeto, metodo);
             setAlerta({
                 status: retornoAPI.status,
                 message: retornoAPI.message
@@ -70,13 +56,13 @@ function Usuario() {
             window.location.reload();
             navigate("/", { replace: true });
         }
-        recuperaUsuarios();
+        recuperaServicos();
     }
 
-    const recuperaUsuarios = async () => {
+    const recuperaServicos = async () => {
         try {
             setCarregando(true);
-            setListaObjetos(await getUsuarioServico());
+            setListaObjetos(await getServicoServico());
             setCarregando(false);
         } catch (err) {
             window.location.reload();
@@ -87,12 +73,12 @@ function Usuario() {
     const remover = async codigo => {
         try {
             if (window.confirm('Deseja remover este objeto')) {
-                let retornoAPI = await deleteUsuarioServico(codigo);
+                let retornoAPI = await deleteServicoServico(codigo);
                 setAlerta({
                     status: retornoAPI.status,
                     message: retornoAPI.message
                 });
-                recuperaUsuarios();
+                recuperaServicos();
             }
         } catch (err) {
             window.location.reload();
@@ -107,13 +93,13 @@ function Usuario() {
     }
 
     useEffect(() => {
-        recuperaUsuarios();
+        recuperaServicos();
     }, []);
 
     return (
-        <UsuarioContext.Provider value={{
+        <ServicoContext.Provider value={{
             alerta, setAlerta, listaObjetos, remover,
-            objeto, editar, acaoCadastrar, isAdm, isOwnUser,
+            objeto, editar, acaoCadastrar,
             handleChange, novoObjeto, editarObjeto
         }}>
             <Carregando carregando={carregando}>
@@ -121,8 +107,8 @@ function Usuario() {
             </Carregando>
 
             <Form />
-        </UsuarioContext.Provider>
+        </ServicoContext.Provider>
     )
 }
 
-export default WithAuth(Usuario);
+export default WithAuth(Servico);

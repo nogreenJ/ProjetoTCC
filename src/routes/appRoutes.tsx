@@ -1,7 +1,9 @@
 import { RouteType } from "./config";
 import Folder from '@mui/icons-material/Folder';
 import Person from '@mui/icons-material/Person';
+import TokenIcon from '@mui/icons-material/Token';
 import Diretorio from "../pages/diretorios/Diretorio";
+import Servico from "../pages/servicos/Servico";
 import Configuracoes from "../pages/configuracoes/Configuracoes";
 
 const appRoutes: RouteType[] = [
@@ -17,6 +19,16 @@ const appRoutes: RouteType[] = [
   },
   {
     index: true,
+    path: "/servicos",
+    element: <Servico />,
+    state: "servicos",
+    sidebarProps: {
+      displayText: "Serviços",
+      icon: <TokenIcon />
+    }
+  },
+  {
+    index: true,
     path: "/config",
     element: <Configuracoes />,
     state: "configuracoes",
@@ -24,36 +36,7 @@ const appRoutes: RouteType[] = [
       displayText: "Conta",
       icon: <Person />
     },
-  },
-  /*{
-    path: "/usuarios",
-    element: <Usuario />,
-    state: "usuarios",
-    sidebarProps: {
-      displayText: "Usuários",
-      icon: <Person />
-    }
-  },
-  {
-    path: "/config",
-    element: <Configuracoes />,
-    state: "configuracoes",
-    sidebarProps: {
-      displayText: "Configurações",
-      icon: <Settings />
-    },
-    child: [
-      {
-        index: true,
-        path: "/config",
-        element: <Configuracoes />,
-        state: "configuracoes.gateways",
-        sidebarProps: {
-          displayText: "Gateways"
-        },
-      },
-    ]
-  }*/
+  }
 ];
 
 export default appRoutes;

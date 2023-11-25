@@ -1,32 +1,29 @@
 import { useContext } from "react";
-import UsuarioContext from "./UsuarioContext";
+import ServicoContext from "./ServicoContext";
 import Alerta from '../../components/common/Alerta';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import AddIcon from '@mui/icons-material/Add';
 
 function Tabela() {
 
-    const { alerta, listaObjetos, remover, novoObjeto,
-        editarObjeto, isAdm, isOwnUser } = useContext(UsuarioContext);
+    const { alerta, listaObjetos, remover, novoObjeto, editarObjeto } = useContext(ServicoContext);
 
+    const btnStyle = {
+        fontSize: 20,
+        color: 'white'
+    }
     return (
         <div style={{ padding: '20px' }}>
-            <h1>Usuarios</h1>
             <Alerta alerta={alerta} />
-            {isAdm() && (
-                <button type="button" className="btn btn-primary"
-                    data-bs-toggle="modal" data-bs-target="#modalEdicao"
-                    onClick={() => novoObjeto()}>
-                    Novo <i className="bi bi-file-earmark-plus"></i>
-                </button>
-            )}
-            {listaObjetos.length === 0 && <h1>Nenhuma usuario encontrada</h1>}
+            {listaObjetos.length === 0 && <h1>Nenhum serviço encontrado</h1>}
             {listaObjetos.length > 0 && (
                 <table className="table">
                     <thead>
                         <tr>
                             <th scope="col">Código</th>
                             <th scope="col">Nome</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Tipo</th>
+                            <th scope="col">Endpoint</th>
                             <th scope="col" style={{ textAlign: 'center' }}>Ações</th>
                         </tr>
                     </thead>
@@ -35,23 +32,32 @@ function Tabela() {
                             <tr key={objeto.codigo}>
                                 <td>{objeto.codigo}</td>
                                 <td>{objeto.nome}</td>
-                                <td>{objeto.email}</td>
-                                <td>{objeto.tipo === 1 ? "Administrador" : "Comum"}</td>
+                                <td>{objeto.endpoint}</td>
                                 <td align="center">
-                                    <button className="btn btn-info"
+                                    <button className="btn btn-info" title="Editar"
                                         onClick={() => editarObjeto(objeto.codigo)}
-                                        disabled={!isOwnUser(objeto.codigo)}
                                         data-bs-toggle="modal" data-bs-target="#modalEdicao">
-                                        <i className="bi bi-pencil-square"></i>
+                                        <BorderColorOutlinedIcon sx={btnStyle} />
                                     </button>
                                     <button className="btn btn-danger" title="Remover"
-                                        disabled={!isAdm() || isOwnUser(objeto.codigo)}
                                         onClick={() => { remover(objeto.codigo); }}>
-                                        <i className="bi bi-trash"></i>
+                                        <DeleteOutlineOutlinedIcon sx={btnStyle} />
                                     </button>
                                 </td>
                             </tr>
                         ))}
+                        <tr key="0">
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td align="center">
+                                <button type="button" className="btn btn-primary" title="Novo"
+                                    data-bs-toggle="modal" data-bs-target="#modalEdicao"
+                                    onClick={() => novoObjeto()}>
+                                    <AddIcon sx={btnStyle} />
+                                </button>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             )}

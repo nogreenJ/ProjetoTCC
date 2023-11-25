@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import $ from "jquery";
 import DiretorioContext from "./DiretorioContext";
 import {
     getDiretorioServico, getDiretorioServicoPorCodigoAPI,
