@@ -1,10 +1,10 @@
 import { AppBar, Toolbar, Typography } from "@mui/material";
 import colorConfigs from "../../configs/colorConfigs";
 import sizeConfigs from "../../configs/sizeConfigs";
-import CampoSelect from '../../components/common/CampoSelect';
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useState, useEffect } from "react";
+import ServicoSelect from "./servicoselect/ServicoSelect";
 
 const Topbar = () => {
   const { appState } = useSelector((state: RootState) => state.appState);
@@ -42,15 +42,7 @@ const Topbar = () => {
         <Typography variant="h6">
           {page}
         </Typography>
-        {appState === 'diretorios' && (
-          <select
-            className="form-select"
-            id="gateway"
-            name="gateway"
-            style={{ width: 200, marginLeft: 'auto', marginRight: 0 }}>
-            <option value='0'>Sem gateway</option>
-          </select>
-        )}
+        {appState === 'diretorios' && (<ServicoSelect />)}
       </Toolbar>
     </AppBar>
   );

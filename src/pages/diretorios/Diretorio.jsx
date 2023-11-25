@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import DiretorioContext from "./DiretorioContext";
 import {
     getDiretorioServico, getDiretorioServicoPorCodigoAPI,
@@ -16,11 +16,16 @@ import DiretorioItem from "./arvore/DiretorioItem";
 import { DiretorioAddItem } from "./arvore/DiretorioItem";
 import FormDiretorio from "./FormDiretorio";
 import FormArquivo from "./FormArquivo";
+import ServicoSelect from "../../components/common/servicoselect/ServicoSelect";
 
 
 function Diretorio() {
 
     let navigate = useNavigate();
+
+    //() => servicoSelectRef.current.getServicoSelecionado() 
+    const servicoSelectRef = useRef(null);
+    const servicoSelect = <ServicoSelect ref={servicoSelectRef} />;
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
