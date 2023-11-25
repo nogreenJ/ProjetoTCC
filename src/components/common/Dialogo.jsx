@@ -34,7 +34,7 @@ function Dialogo(props) {
                             {props.children}
                         </div>
                         <div className="modal-footer" style={{ textAlign: 'center', display: 'block' }}>
-                            <Button type="submit" className="w-25 btn btn-lg btn-outline-primary text-primary">
+                            <Button type="submit" className="w-25 btn btn-lg btn-outline-primary text-primary" data-bs-dismiss="modal">
                                 Salvar
                             </Button>
                             <Button type="button" className="w-25 btn btn-lg btn-outline-danger text-danger" data-bs-dismiss="modal">

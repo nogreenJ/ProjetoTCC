@@ -4,7 +4,10 @@ import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import FolderIcon from '@mui/icons-material/Folder';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import Form from "../Form";
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import TagIcon from '@mui/icons-material/Tag';
 import { styled } from "@mui/material/styles";
 import Button from '@mui/material/Button';
 import colorConfigs from "../../../configs/colorConfigs";
@@ -65,13 +68,20 @@ const btnStyle = {
 }
 
 export function DiretorioAddItem({ parentId }) {
-    const { novoObjeto } = useContext(DiretorioContext);
+    const { novoObjeto, novoArquivo } = useContext(DiretorioContext);
     return (
         <ItemArvoreAddRoot
             key={parentId ? 99 + parentId : 0} label={
-                <Button onClick={() => novoObjeto(parentId)} sx={btnStyle}>
-                    <CreateNewFolderOutlinedIcon />
-                </Button>}
+                <span className="actionBtns">
+                    <Button onClick={() => novoObjeto(parentId)} sx={btnStyle} title="Novo diretório"
+                        data-bs-toggle="modal" data-bs-target="#modalEdicaoDir">
+                        <CreateNewFolderOutlinedIcon />
+                    </Button>
+                    <Button sx={btnStyle} title="Adicionar arquivo" onClick={() => novoArquivo(parentId)}
+                        data-bs-toggle="modal" data-bs-target="#modalEdicaoArq">
+                        <UploadFileIcon />
+                    </Button>
+                </span>}
             nodeId={(parentId ? 99 + parentId : 0) + ''}
         />
     )
@@ -79,20 +89,44 @@ export function DiretorioAddItem({ parentId }) {
 
 export default function DiretorioItem({ obj, children }) {
 
-    const { editarObjeto, remover } = useContext(DiretorioContext);
+    const { editarObjeto, remover, editarArquivo, removerArquivo } = useContext(DiretorioContext);
 
-    const label = <div onClick={event => event.stopPropagation()}>
+    const dirLabel = <div onClick={event => event.stopPropagation()}>
         <div>
             <FolderIcon sx={{ margin: '-7px 5px -6px 0' }} />
             {obj.nome}
             <span className="actionBtns">
-                <Button className="btn btn-sm"
+                <Button className="btn btn-sm" title="Editar"
                     onClick={() => editarObjeto(obj.codigo)} sx={btnStyle}
-                    data-bs-toggle="modal" data-bs-target="#modalEdicao">
+                    data-bs-toggle="modal" data-bs-target="#modalEdicaoDir">
                     <BorderColorOutlinedIcon />
                 </Button>
                 <Button className="btn btn-sm" title="Remover" sx={btnStyle}
                     onClick={() => { remover(obj.codigo); }}>
+                    <DeleteOutlineOutlinedIcon />
+                </Button>
+            </span>
+        </div>
+    </div>
+
+    const arqLabel = <div onClick={event => event.stopPropagation()}>
+        <div>
+            <InsertDriveFileIcon sx={{ margin: '-7px 5px -6px 0' }} />
+            {obj.nome}
+            <span className="actionBtns">
+                <Button className="btn btn-sm" title="Baixar" sx={btnStyle}>
+                    <FileDownloadIcon />
+                </Button>
+                <Button className="btn btn-sm" title="Copiar CID" sx={btnStyle}>
+                    <TagIcon />
+                </Button>
+                <Button className="btn btn-sm" title="Editar" sx={btnStyle}
+                    onClick={() => editarArquivo(obj.codigo)}
+                    data-bs-toggle="modal" data-bs-target="#modalEdicaoArq">
+                    <BorderColorOutlinedIcon />
+                </Button>
+                <Button className="btn btn-sm" title="Remover arquivo" sx={btnStyle}
+                    onClick={() => { removerArquivo(obj.codigo); }}>
                     <DeleteOutlineOutlinedIcon />
                 </Button>
             </span>
@@ -104,16 +138,25 @@ export default function DiretorioItem({ obj, children }) {
             <ItemArvorePai
                 key={obj.codigo}
                 nodeId={obj.codigo + ''}
-                label={label}
+                label={dirLabel}
+                children={children}
+            />
+        )
+    } else if (!obj.formato || obj.formato === "") {
+        return (
+            <ItemArvore
+                key={obj.codigo}
+                nodeId={obj.codigo + ''}
+                label={dirLabel}
                 children={children}
             />
         )
     } else {
         return (
             <ItemArvore
-                nodeId={obj.codigo + ''}
-                label={label}
-                children={children}
+                key={obj.codigo * 11}
+                nodeId={obj.codigo + 'arq'}
+                label={arqLabel}
             />
         )
     }

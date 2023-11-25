@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
+import $ from "jquery";
 import DiretorioContext from "./DiretorioContext";
 import {
     getDiretorioServico, getDiretorioServicoPorCodigoAPI,
-    deleteDiretorioServico, cadastraDiretorioServico
+    deleteDiretorioServico, cadastraDiretorioServico,
+    getArquivoServicoPorCodigoAPI, cadastraArquivoServico,
+    deleteArquivoServico
 }
     from '../../servicos/DiretorioServico';
 import Tabela from "./Tabela";
@@ -12,7 +15,8 @@ import { getUsuario } from "../../seguranca/Autenticacao";
 import { useNavigate } from "react-router-dom";
 import DiretorioItem from "./arvore/DiretorioItem";
 import { DiretorioAddItem } from "./arvore/DiretorioItem";
-import Form from "./Form";
+import FormDiretorio from "./FormDiretorio";
+import FormArquivo from "./FormArquivo";
 
 
 function Diretorio() {
@@ -22,10 +26,11 @@ function Diretorio() {
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [editar, setEditar] = useState(false);
+    const [arquivo, setArquivo] = useState({ codigo: "", nome: "", formato: "", parent: "", dono: "", criptografia: "", cid: "" });
     const [objeto, setObjeto] = useState({ codigo: "", nome: "", parent: "", usuario: "" });
     const [carregando, setCarregando] = useState(false);
 
-    const novoObjeto = (parentId) => {
+    const novoObjeto = async (parentId) => {
         setEditar(false);
         setAlerta({ status: "", message: "" });
         setObjeto({ codigo: 0, nome: "", parent: (parentId ? parentId : ""), usuario: getUsuario().codigo });
@@ -42,9 +47,27 @@ function Diretorio() {
         }
     }
 
+    const novoArquivo = async (parentId) => {
+        setEditar(false);
+        setAlerta({ status: "", message: "" });
+        setObjeto({ codigo: "", nome: "", formato: "", parent: "", dono: getUsuario().codigo, criptografia: "", cid: "" });
+    }
+
+    const editarArquivo = async codigo => {
+        try {
+            setEditar(true);
+            setAlerta({ status: "", message: "" });
+            setObjeto(await getArquivoServicoPorCodigoAPI(codigo));
+        } catch (err) {
+            window.location.reload();
+            navigate("/", { replace: true });
+        }
+    }
+
     const getListaObjetosSemSelf = () => {
+        if (objeto.formato) return listaObjetos;
         const newArr = listaObjetos.filter(obj => {
-            return (obj && objeto) && (obj.codigo !== objeto.codigo);
+            return (obj && objeto) && (obj.codigo !== objeto.codigo) && (!obj.formato);
         });
         return newArr
     }
@@ -86,8 +109,36 @@ function Diretorio() {
                 setEditar(true);
             }
         } catch (err) {
-            window.location.reload();
-            navigate("/", { replace: true });
+            //window.location.reload();
+            //navigate("/", { replace: true });
+            setAlerta({
+                status: 'error',
+                message: 'Erro: ' + err
+            });
+        }
+        recuperaDiretorios();
+    }
+
+    const acaoCadastraArquivo = async e => {
+        e.preventDefault();
+        const metodo = editar ? "PUT" : "POST";
+        try {
+            let retornoAPI = await cadastraArquivoServico(objeto, metodo);
+            setAlerta({
+                status: retornoAPI.status,
+                message: retornoAPI.message
+            });
+            setObjeto(retornoAPI.objeto);
+            if (!editar) {
+                setEditar(true);
+            }
+        } catch (err) {
+            //window.location.reload();
+            //navigate("/", { replace: true });
+            setAlerta({
+                status: 'error',
+                message: 'Erro: ' + err
+            });
         }
         recuperaDiretorios();
     }
@@ -105,8 +156,24 @@ function Diretorio() {
 
     const remover = async codigo => {
         try {
-            if (window.confirm('Deseja remover este objeto')) {
+            if (window.confirm('Deseja deletar este diretório?')) {
                 let retornoAPI = await deleteDiretorioServico(codigo);
+                setAlerta({
+                    status: retornoAPI.status,
+                    message: retornoAPI.message
+                });
+                recuperaDiretorios();
+            }
+        } catch (err) {
+            window.location.reload();
+            navigate("/", { replace: true });
+        }
+    }
+
+    const removerArquivo = async codigo => {
+        try {
+            if (window.confirm('Deseja deletar este arquivo?')) {
+                let retornoAPI = await deleteArquivoServico(codigo);
                 setAlerta({
                     status: retornoAPI.status,
                     message: retornoAPI.message
@@ -123,6 +190,7 @@ function Diretorio() {
         const name = e.target.name;
         const value = e.target.value;
         setObjeto({ ...objeto, [name]: value });
+        setArquivo({ ...objeto, [name]: value });
     }
 
     useEffect(() => {
@@ -133,13 +201,14 @@ function Diretorio() {
         <DiretorioContext.Provider value={{
             alerta, setAlerta, listaObjetos, remover,
             objeto, editar, acaoCadastrar, getListaObjetosSemSelf, getListFromData,
-            getTreeItemsFromData, handleChange, novoObjeto, editarObjeto
+            arquivo, getTreeItemsFromData, handleChange, novoObjeto, editarObjeto,
+            removerArquivo, acaoCadastraArquivo, novoArquivo, editarArquivo
         }}>
-
             <Carregando carregando={carregando}>
                 <Tabela />
             </Carregando>
-            <Form />
+            <FormDiretorio />
+            <FormArquivo />
         </DiretorioContext.Provider>
     )
 }

@@ -35,19 +35,16 @@ function Tabela() {
     return (
         <div style={{ marginTop: '-16px' }}>
             <Alerta alerta={alerta} />
-            {listaObjetos.length === 0 && <h1>Nenhum diretório encontrado</h1>}
-            {listaObjetos.length > 0 && (
-                <TreeView
-                    key="keyRoot"
-                    aria-label="file system navigator"
-                    defaultCollapseIcon={<ExpandMoreIcon />}
-                    defaultExpandIcon={<ChevronRightIcon />}
-                >
-                    <ThemeProvider theme={theme}>
-                        {getTreeItemsFromData()}
-                    </ThemeProvider>
-                </TreeView>
-            )}
+            <TreeView
+                key="keyRoot"
+                aria-label="file system navigator"
+                defaultCollapseIcon={<ExpandMoreIcon />}
+                defaultExpandIcon={<ChevronRightIcon />}
+            >
+                <ThemeProvider theme={theme}>
+                    {getTreeItemsFromData()}
+                </ThemeProvider>
+            </TreeView>
         </div>
     )
 }
