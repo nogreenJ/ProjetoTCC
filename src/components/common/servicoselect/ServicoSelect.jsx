@@ -33,21 +33,13 @@ const ServicoSelect = forwardRef((props, ref) => {
         fn();
     }, []);
 
-    /*
-            {
-                servicos.map((ser) => (
-                    <option key={ser.codigo} value={ser.codigo}>
-                        {ser.nome}
-                    </option>
-                ))
-            } */
     return (
         <select
             className="form-select" readOnly
             id="gateway" name="gateway"
             style={{ width: 200, marginLeft: 'auto', marginRight: 0 }}
             value={selectedSer}>
-            <option value='0'>Sem gateway</option>
+            <option value=''>Sem gateway</option>
             {
                 servicos.map((ser) => (
                     <option key={ser.codigo} value={ser.codigo}>

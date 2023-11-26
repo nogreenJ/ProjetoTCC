@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { gravaAutenticacao, getToken, logout } from "../../seguranca/Autenticacao";
+import { gravaAutenticacao, getToken } from "../../seguranca/Autenticacao";
 import Carregando from "../../components/common/Carregando";
 import Alerta from "../../components/common/Alerta";
 import './signin.css';
@@ -7,6 +7,9 @@ import MainLayout from "../../components/layout/MainLayout";
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@popperjs/core/dist/cjs/popper.js'
 import 'bootstrap/dist/js/bootstrap.min.js'
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import InputGroup from 'react-bootstrap/InputGroup';
 
 function Login() {
 
@@ -17,6 +20,8 @@ function Login() {
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [autenticado, setAutenticado] = useState(false);
     const [carregando, setCarregando] = useState(false);
+
+    const [showPassword, setShowPassword] = useState(false);
 
     const changeAcao = () => {
         if (isCadastro) {
@@ -127,13 +132,26 @@ function Login() {
                                             onChange={e => setEmail(e.target.value)} />
                                     </span>
                                 </div>
-                                <div className="form-group" style={{ marginBottom: 5 }}>
+                                <div className="form-group" style={{ marginBottom: 5, paddingLeft: 2 }}>
                                     <span style={{ display: 'flex' }}>
                                         <label className="form-label" style={labelStyle}>Senha</label>
-                                        <input type="password" className="form-control" id="floatingPassword" placeholder="Senha"
-                                            value={senha}
-                                            name="senha" style={inputStyle}
-                                            onChange={e => setSenha(e.target.value)} />
+
+                                        <InputGroup className="mb-3">
+                                            <input className="form-control" id="floatingPassword"
+                                                value={senha} placeholder="Senha"
+                                                name="senha" style={inputStyle}
+                                                type={showPassword ? "text" : "password"}
+                                                onChange={e => setSenha(e.target.value)} />
+                                            <button className="btn" title="Ver Senha" type="button"
+                                                style={{ border: "1px solid #dee2e6", height: 38 }}
+                                                onClick={() => setShowPassword(!showPassword)}>
+                                                {showPassword ? (
+                                                    <VisibilityIcon sx={{ fontSize: 20 }} />
+                                                ) : (
+                                                    <VisibilityOffIcon sx={{ fontSize: 20 }} />
+                                                )}
+                                            </button>
+                                        </InputGroup>
                                     </span>
                                 </div>
                                 <div className="form-group">

@@ -33,21 +33,21 @@ function Form() {
                 className="needs-validation" noValidate>
                 <Alerta alerta={alerta} />
                 <CampoEntrada id="txtCodigo" label="Código" tipo="number"
-                    name="codigo" value={objeto ? objeto.codigo : 0}
+                    name="codigo" value={objeto ? objeto.codigo : 0} width="col-md-3"
                     requerido={false} readonly={true} handlechange={handleChange}
                     maximocaracteres={5} classes="w-25" />
                 <CampoEntrada id="txtEmail" label="Email" tipo="text"
-                    name="email" value={objeto ? objeto.email : ''}
+                    name="email" value={objeto ? objeto.email : ''} width="col-md-8"
                     requerido={true} readonly={true} handlechange={handleChange}
                     textovalido="Email OK" textoinvalido="Informe o email"
                     maximocaracteres={40} classes="w-50" />
                 <CampoEntrada id="txtNome" label="Nome" tipo="text"
-                    name="nome" value={objeto ? objeto.nome : ''}
+                    name="nome" value={objeto ? objeto.nome : ''} width="col-md-8"
                     requerido={true} readonly={false} handlechange={handleChange}
                     textovalido="Nome OK" textoinvalido="Informe o nome"
                     maximocaracteres={40} classes="w-50" />
-                <CampoEntrada id="txtSenha" label="Senha" tipo="text"
-                    name="senha" value={objeto ? objeto.senha : ''}
+                <CampoEntrada id="txtSenha" label="Senha" tipo="password"
+                    name="senha" value={objeto ? objeto.senha : ''} width="col-md-3"
                     requerido={true} readonly={false} handlechange={handleChange}
                     textovalido="Senha OK" textoinvalido="Informe a senha"
                     maximocaracteres={40} classes="w-50" />

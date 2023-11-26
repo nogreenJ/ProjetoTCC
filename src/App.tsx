@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { getToken } from './seguranca/Autenticacao';
 import { routes } from './routes';
 import MainLayout from "./components/layout/MainLayout";
+import "./app.css";
 
 function App() {
   return (
