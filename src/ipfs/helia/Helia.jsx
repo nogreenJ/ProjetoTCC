@@ -10,7 +10,7 @@ const Helia = (props) => {
     const [started, setStarted] = useState(false);
     const [helia, setHelia] = useState(null);
     const [heliaFs, setHeliaFs] = useState(null);
-    const pinner = useState(null);
+    let pinner = null;
 
     const createPinner = async (url, key) => {
         console.log("create pinner")
