@@ -10,6 +10,7 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import InputGroup from 'react-bootstrap/InputGroup';
+import assets from "../../assets";
 
 function Login() {
 
@@ -107,11 +108,9 @@ function Login() {
             <Carregando carregando={carregando}>
                 <div>
                     <div className="text-center">
-                        <Alerta alerta={alerta} />
+                        <img src={assets.images.logo_full_light} style={{ height: 'auto', width: '25%' }} />
                         <main className="form-signin">
                             <form onSubmit={acaoLogin} style={{ width: 300, marginLeft: 30 }}>
-                                <h1 className="h3 mb-3 fw-normal">{isCadastro ? "Cadastrar" : "Entrar"}</h1>
-
                                 {isCadastro && <div className="form-floating">
                                     <div className="form-group" style={{ marginBottom: 5 }}>
                                         <span style={{ display: 'flex' }}>
@@ -175,6 +174,7 @@ function Login() {
                                 </div>
                             </form>
                         </main>
+                        <Alerta alerta={alerta} />
                     </div>
                 </div>
             </Carregando>

@@ -31,7 +31,7 @@ function Dialogo(props) {
                     <form id={props.idformulario} onSubmit={props.acaoCadastrar}
                         className="needs-validation" noValidate>
                         <div className="modal-body">
-                            <div class="container">
+                            <div className="container">
                                 {props.children}
                             </div>
                         </div>

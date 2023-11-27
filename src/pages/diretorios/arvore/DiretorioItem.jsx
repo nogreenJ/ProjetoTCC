@@ -112,18 +112,13 @@ export default function DiretorioItem({ obj, children }) {
     const arqLabel = <div onClick={event => event.stopPropagation()}>
         <div>
             <InsertDriveFileIcon sx={{ margin: '-7px 5px -6px 0' }} />
-            {obj.nome}
+            {obj.nome}{obj.formato}
             <span className="actionBtns">
                 <Button className="btn btn-sm" title="Baixar" sx={btnStyle}>
                     <FileDownloadIcon />
                 </Button>
                 <Button className="btn btn-sm" title="Copiar CID" sx={btnStyle}>
                     <TagIcon />
-                </Button>
-                <Button className="btn btn-sm" title="Editar" sx={btnStyle}
-                    onClick={() => editarArquivo(obj.codigo)}
-                    data-bs-toggle="modal" data-bs-target="#modalEdicaoArq">
-                    <BorderColorOutlinedIcon />
                 </Button>
                 <Button className="btn btn-sm" title="Remover arquivo" sx={btnStyle}
                     onClick={() => { removerArquivo(obj.codigo); }}>
@@ -133,7 +128,8 @@ export default function DiretorioItem({ obj, children }) {
         </div>
     </div>
 
-    if (!obj.parent || obj.parent === "") {
+
+    if (!obj.formato && (!obj.parent || obj.parent === "")) {
         return (
             <ItemArvorePai
                 key={obj.codigo}
@@ -142,7 +138,7 @@ export default function DiretorioItem({ obj, children }) {
                 children={children}
             />
         )
-    } else if (!obj.formato || obj.formato === "") {
+    } else if (!obj.formato) {
         return (
             <ItemArvore
                 key={obj.codigo}

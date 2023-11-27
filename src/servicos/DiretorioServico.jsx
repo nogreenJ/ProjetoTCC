@@ -16,9 +16,7 @@ export const getDiretorioServico = async () => {
     return data;
 }
 
-export const getDiretorioArquivoServico = async () => {
-    const user = getUsuario().codigo;
-
+export const getDiretorioArquivoServico = async (codigo) => {
     const response =
         await fetch(`${process.env.REACT_APP_ENDERECO_API}/dirarquivos`,
             {

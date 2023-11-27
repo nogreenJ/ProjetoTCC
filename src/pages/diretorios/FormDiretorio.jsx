@@ -23,7 +23,7 @@ const style = {
 
 export default function FormDiretorio({ parent }) {
 
-    const { objeto, handleChange, acaoCadastrar, alerta, getListaObjetosSemSelf } = useContext(DiretorioContext);
+    const { editar, objeto, handleChangeObj, acaoCadastrar, alerta, getListaObjetosSemSelf } = useContext(DiretorioContext);
 
     parent = parent ? parent : (objeto ? objeto.parent : "");
 
@@ -35,18 +35,18 @@ export default function FormDiretorio({ parent }) {
                 <div>
                     <CampoEntrada id="txtCodigo" label="Código" tipo="number"
                         name="codigo" value={objeto ? objeto.codigo : 0}
-                        handlechange={handleChange}
+                        handlechange={handleChangeObj}
                         requerido={false} readonly={true}
                         maximocaracteres={5} classes="w-25" />
                     <CampoEntrada id="txtNome" label="Nome" tipo="text"
                         name="nome" value={objeto ? objeto.nome : ''}
-                        handlechange={handleChange}
+                        handlechange={handleChangeObj}
                         requerido={true} readonly={false}
                         textovalido="Nome OK" textoinvalido="Informe o nome"
                         maximocaracteres={40} classes="w-50" />
                     <CampoSelect id="txtParent" label="Dir. Pai"
                         name="parent" value={parent}
-                        handlechange={handleChange}
+                        handlechange={handleChangeObj}
                         requerido={false} classes="w-50"
                         textovalido="Dir. Pai OK">
                         <option key="" value="">

@@ -10,13 +10,13 @@ function CampoEntrada({ id, label, tipo, name, value, handlechange, width,
 
     return (
         <div className="form-group" style={{ margin: '5px 0 5px 0' }}>
-            <div class="row">
-                <span class="col-md-12" style={{ display: 'flex' }}>
+            <div className="row">
+                <span className="col-md-12" style={{ display: 'flex' }}>
                     <label htmlFor={id} className={(labelClasses ? labelClasses : '') + " form-label col-md-2"}
                         style={{ justifyContent: 'right', display: 'flex', padding: '6px 6px 0 0' }}>
                         {label}
                     </label>
-                    <span class={width ? width : "col-md-8"}>
+                    <span className={width ? width : "col-md-8"}>
                         {tipo === "password" ?
                             <InputGroup>
                                 <input

@@ -5,7 +5,6 @@
   margin: auto;
   border: 1px lightgray solid;
   border-radius: 10px;
-  transform: translateY(55%);
   transform-origin: center;
 }
 
@@ -21,4 +20,14 @@
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
+}
+
+.btn-primary {
+  background-color: #6192BA;
+  border-color: #6192BA;
+}
+
+.btn-primary:hover {
+  background-color: #486d8b;
+  border-color: #486d8b;
 }

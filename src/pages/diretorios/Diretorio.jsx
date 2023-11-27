@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import DiretorioContext from "./DiretorioContext";
 import {
-    getDiretorioServico, getDiretorioServicoPorCodigoAPI,
+    getDiretorioArquivoServico, getDiretorioServicoPorCodigoAPI,
     deleteDiretorioServico, cadastraDiretorioServico,
     getArquivoServicoPorCodigoAPI, cadastraArquivoServico,
     deleteArquivoServico
@@ -16,21 +16,20 @@ import DiretorioItem from "./arvore/DiretorioItem";
 import { DiretorioAddItem } from "./arvore/DiretorioItem";
 import FormDiretorio from "./FormDiretorio";
 import FormArquivo from "./FormArquivo";
-import ServicoSelect from "../../components/common/servicoselect/ServicoSelect";
+import HeliaContext from "../../ipfs/helia/HeliaContext";
 
 
 function Diretorio() {
 
     let navigate = useNavigate();
 
-    //() => servicoSelectRef.current.getServicoSelecionado() 
-    const servicoSelectRef = useRef(null);
-    const servicoSelect = <ServicoSelect ref={servicoSelectRef} />;
+    const { pinContent } = useContext(HeliaContext)
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [editar, setEditar] = useState(false);
     const [arquivo, setArquivo] = useState({ codigo: "", nome: "", formato: "", parent: "", dono: "", criptografia: "", cid: "" });
+    let activeFile = null;
     const [objeto, setObjeto] = useState({ codigo: "", nome: "", parent: "", usuario: "" });
     const [carregando, setCarregando] = useState(false);
 
@@ -54,7 +53,7 @@ function Diretorio() {
     const novoArquivo = async (parentId) => {
         setEditar(false);
         setAlerta({ status: "", message: "" });
-        setObjeto({ codigo: "", nome: "", formato: "", parent: "", dono: getUsuario().codigo, criptografia: "", cid: "" });
+        setArquivo({ codigo: "", nome: "", formato: "", parent: (parentId ? parentId : ""), dono: getUsuario().codigo, criptografia: "", cid: "" });
     }
 
     const editarArquivo = async codigo => {
@@ -69,7 +68,7 @@ function Diretorio() {
     }
 
     const getListaObjetosSemSelf = () => {
-        if (objeto.formato) return listaObjetos;
+        if (!objeto || objeto.formato) return listaObjetos;
         const newArr = listaObjetos.filter(obj => {
             return (obj && objeto) && (obj.codigo !== objeto.codigo) && (!obj.formato);
         });
@@ -80,10 +79,17 @@ function Diretorio() {
         let list = listaObjetos
             .filter(obj => !prentId ? obj.parent === "" || !obj.parent : obj.parent === prentId)
             .map(obj => {
-                const children = getTreeItemsFromData(obj.codigo);
-                const item = (
-                    <DiretorioItem obj={obj} children={children} />
-                );
+                let item;
+                if (obj.formato) {
+                    item = (
+                        <DiretorioItem obj={obj} />
+                    );
+                } else {
+                    const children = getTreeItemsFromData(obj.codigo);
+                    item = (
+                        <DiretorioItem obj={obj} children={children} />
+                    );
+                }
                 return item;
             })
 
@@ -113,8 +119,6 @@ function Diretorio() {
                 setEditar(true);
             }
         } catch (err) {
-            //window.location.reload();
-            //navigate("/", { replace: true });
             setAlerta({
                 status: 'error',
                 message: 'Erro: ' + err
@@ -127,7 +131,13 @@ function Diretorio() {
         e.preventDefault();
         const metodo = editar ? "PUT" : "POST";
         try {
-            let retornoAPI = await cadastraArquivoServico(objeto, metodo);
+            let cid = null;
+            if (!editar) {
+                cid = await pinContent(activeFile)
+                if (!cid) throw new Error(cid)
+            }
+            setObjeto({ ...objeto, 'cid': cid });
+            let retornoAPI = await cadastraArquivoServico(arquivo, metodo);
             setAlerta({
                 status: retornoAPI.status,
                 message: retornoAPI.message
@@ -137,8 +147,6 @@ function Diretorio() {
                 setEditar(true);
             }
         } catch (err) {
-            //window.location.reload();
-            //navigate("/", { replace: true });
             setAlerta({
                 status: 'error',
                 message: 'Erro: ' + err
@@ -150,7 +158,7 @@ function Diretorio() {
     const recuperaDiretorios = async () => {
         try {
             setCarregando(true);
-            setListaObjetos(await getDiretorioServico());
+            setListaObjetos(await getDiretorioArquivoServico());
             setCarregando(false);
         } catch (err) {
             window.location.reload();
@@ -190,11 +198,25 @@ function Diretorio() {
         }
     }
 
-    const handleChange = (e) => {
+    const onChangeArquivo = (novoArq, binaryStr) => {
+        activeFile = {
+            nome: novoArq.name.split('.')[0], binary: binaryStr,
+            formato: ('.' + novoArq.name.split('.')[1])
+        };
+        setArquivo({ ...arquivo, 'nome': activeFile.nome, 'formato': activeFile.formato });
+        console.log(activeFile)
+    }
+
+    const handleChangeObj = (e) => {
         const name = e.target.name;
         const value = e.target.value;
         setObjeto({ ...objeto, [name]: value });
-        setArquivo({ ...objeto, [name]: value });
+    }
+
+    const handleChangeArq = (e) => {
+        const name = e.target.name;
+        const value = e.target.value;
+        setArquivo({ ...arquivo, [name]: value });
     }
 
     useEffect(() => {
@@ -205,8 +227,8 @@ function Diretorio() {
         <DiretorioContext.Provider value={{
             alerta, setAlerta, listaObjetos, remover,
             objeto, editar, acaoCadastrar, getListaObjetosSemSelf, getListFromData,
-            arquivo, getTreeItemsFromData, handleChange, novoObjeto, editarObjeto,
-            removerArquivo, acaoCadastraArquivo, novoArquivo, editarArquivo
+            arquivo, getTreeItemsFromData, handleChangeObj, handleChangeArq, novoObjeto, editarObjeto,
+            removerArquivo, acaoCadastraArquivo, novoArquivo, editarArquivo, onChangeArquivo
         }}>
             <Carregando carregando={carregando}>
                 <Tabela />
