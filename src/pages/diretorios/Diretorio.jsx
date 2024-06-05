@@ -7,6 +7,8 @@ import {
     deleteArquivoServico
 }
     from '../../servicos/DiretorioServico';
+    
+import {getServicoServicoPorCodigoAPI} from '../../servicos/ServicoServico';
 import Tabela from "./Tabela";
 import Carregando from "../../components/common/Carregando";
 import WithAuth from "../../seguranca/WithAuth";
@@ -23,12 +25,12 @@ function Diretorio() {
 
     let navigate = useNavigate();
 
-    const { pinContent } = useContext(HeliaContext)
+    const { pinContent, deleteContent, downloadContent } = useContext(HeliaContext)
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [editar, setEditar] = useState(false);
-    const [arquivo, setArquivo] = useState({ codigo: "", nome: "", formato: "", parent: "", dono: "", criptografia: "", cid: "" });
+    const [arquivo, setArquivo] = useState({ codigo: "", nome: "", formato: "", parent: "", dono: "", criptografia: "", cid: "" , servico: "" });
     let activeFile = null;
     const [objeto, setObjeto] = useState({ codigo: "", nome: "", parent: "", usuario: "" });
     const [carregando, setCarregando] = useState(false);
@@ -127,24 +129,52 @@ function Diretorio() {
         recuperaDiretorios();
     }
 
+    const onChangeArquivo = (novoArq, binaryStr) => {
+        activeFile = {
+            nome: novoArq.name.split('.')[0], binary: binaryStr,
+            formato: ('.' + novoArq.name.split('.')[1])
+        };
+        setArquivo({ ...arquivo, 'nome': activeFile.nome, 'formato': activeFile.formato , 'binaryStr': binaryStr });
+    }
+
     const acaoCadastraArquivo = async e => {
         e.preventDefault();
         const metodo = editar ? "PUT" : "POST";
         try {
-            let cid = null;
+            let ret = null;
             if (!editar) {
-                cid = await pinContent(activeFile)
-                if (!cid) throw new Error(cid)
-            }
-            setObjeto({ ...objeto, 'cid': cid });
-            let retornoAPI = await cadastraArquivoServico(arquivo, metodo);
-            setAlerta({
-                status: retornoAPI.status,
-                message: retornoAPI.message
-            });
-            setObjeto(retornoAPI.objeto);
-            if (!editar) {
-                setEditar(true);
+                await pinContent(arquivo)
+                    .then(async (ret) => {
+                        if(ret){
+                            if (!ret.cid) {
+                                setAlerta({
+                                    status: 'error',
+                                    message: "Erro ao tentar fazer upload do arquivo."
+                                });
+                            } else {
+                                const arq = arquivo;
+                                arq.cid = ret.cid.toString();
+                                arq.servico = 4;
+                                arq.dono = getUsuario().codigo;
+                                let retornoAPI = await cadastraArquivoServico(arq, metodo);
+                                setAlerta({
+                                    status: retornoAPI.status,
+                                    message: retornoAPI.message
+                                });
+                                //setObjeto(retornoAPI.objeto);
+                            }
+                            setEditar(true);
+                            recuperaDiretorios();
+                        }
+                    });                
+            } else {
+                let retornoAPI = await cadastraArquivoServico(arquivo, metodo);
+                setAlerta({
+                    status: retornoAPI.status,
+                    message: retornoAPI.message
+                });
+                setObjeto(retornoAPI.objeto);
+                recuperaDiretorios();
             }
         } catch (err) {
             setAlerta({
@@ -152,13 +182,25 @@ function Diretorio() {
                 message: 'Erro: ' + err
             });
         }
-        recuperaDiretorios();
+    }
+
+    const acaoDownloadArquivo = async (arq) =>{
+        //const arq = await getArquivoServicoPorCodigoAPI(codigo);
+        downloadContent(arq)
     }
 
     const recuperaDiretorios = async () => {
         try {
             setCarregando(true);
-            setListaObjetos(await getDiretorioArquivoServico());
+            const lista = await getDiretorioArquivoServico();
+            if(lista && !lista.status){
+                setListaObjetos(lista);
+            } else {
+                setAlerta({
+                    status: lista.status,
+                    message: lista.message
+                });
+            }
             setCarregando(false);
         } catch (err) {
             window.location.reload();
@@ -182,29 +224,31 @@ function Diretorio() {
         }
     }
 
-    const removerArquivo = async codigo => {
+    const removerArquivo = async (codigo, hash, servico) => {
         try {
             if (window.confirm('Deseja deletar este arquivo?')) {
-                let retornoAPI = await deleteArquivoServico(codigo);
-                setAlerta({
-                    status: retornoAPI.status,
-                    message: retornoAPI.message
-                });
-                recuperaDiretorios();
+                const pinService = await getServicoServicoPorCodigoAPI(servico);
+                await deleteContent(hash, pinService)
+                    .then( async res => {
+                        if(res.success){
+                            let retornoAPI = await deleteArquivoServico(codigo);
+                            setAlerta({
+                                status: retornoAPI.status,
+                                message: retornoAPI.message
+                            });
+                            recuperaDiretorios();
+                        } else {
+                            setAlerta({
+                                status: "error",
+                                message: "Erro ao deletar arquivo."
+                            });
+                        }
+                    });
             }
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
         }
-    }
-
-    const onChangeArquivo = (novoArq, binaryStr) => {
-        activeFile = {
-            nome: novoArq.name.split('.')[0], binary: binaryStr,
-            formato: ('.' + novoArq.name.split('.')[1])
-        };
-        setArquivo({ ...arquivo, 'nome': activeFile.nome, 'formato': activeFile.formato });
-        console.log(activeFile)
     }
 
     const handleChangeObj = (e) => {
@@ -228,7 +272,7 @@ function Diretorio() {
             alerta, setAlerta, listaObjetos, remover,
             objeto, editar, acaoCadastrar, getListaObjetosSemSelf, getListFromData,
             arquivo, getTreeItemsFromData, handleChangeObj, handleChangeArq, novoObjeto, editarObjeto,
-            removerArquivo, acaoCadastraArquivo, novoArquivo, editarArquivo, onChangeArquivo
+            removerArquivo, acaoCadastraArquivo, novoArquivo, editarArquivo, onChangeArquivo, acaoDownloadArquivo
         }}>
             <Carregando carregando={carregando}>
                 <Tabela />

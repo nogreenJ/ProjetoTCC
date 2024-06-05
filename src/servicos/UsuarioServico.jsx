@@ -1,5 +1,7 @@
 import { getToken } from "../seguranca/Autenticacao";
 
+var CryptoJS = require("crypto-js");
+
 export const getUsuarioServico = async () => {
     const response =
         await fetch(`${process.env.REACT_APP_ENDERECO_API}/usuario`,
@@ -42,8 +44,9 @@ export const deleteUsuarioServico = async codigo => {
     return data;
 }
 
-
 export const cadastraUsuarioServico = async (objeto, metodo) => {
+    objeto.senha = CryptoJS.SHA1(objeto.senha).toString();
+    objeto.novaSenha = CryptoJS.SHA1(objeto.novaSenha).toString();
     const response = await fetch(`${process.env.REACT_APP_ENDERECO_API}/usuario`, {
         method: metodo,
         headers: {

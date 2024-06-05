@@ -3,6 +3,7 @@ import Alerta from '../../components/common/Alerta';
 import ServicoContext from './ServicoContext';
 import CampoEntrada from '../../components/common/CampoEntrada';
 import Dialogo from '../../components/common/Dialogo';
+import CampoSelect from '../../components/common/CampoSelect';
 
 function Form() {
 
@@ -23,10 +24,22 @@ function Form() {
                 requerido={true} readonly={false}
                 textovalido="Nome OK" textoinvalido="Informe o nome"
                 maximocaracteres={40} />
+            <CampoSelect id="txtTipo" label="Provedor"
+                    name="tipo" value={objeto ? objeto.tipo : 0}
+                    requerido={false} classes="w-50"
+                    handlechange={handleChange}
+                    textovalido="Provedor OK">
+                    <option key="" value="">
+                        Selecione
+                    </option>
+                    <option key="Piñata" value="1">
+                        Piñata
+                    </option>
+            </CampoSelect>
             <CampoEntrada id="txtEndpoint" label="Endpoint" tipo="text"
                 name="endpoint" value={objeto ? objeto.endpoint : ''}
                 handlechange={handleChange} width="col-md-6"
-                requerido={true} readonly={false}
+                requerido={false} readonly={false}
                 textovalido="Endpoint OK" textoinvalido="Informe o endpoint"
                 maximocaracteres={200} />
             <CampoEntrada id="txtKey" label="Chave" tipo="password"
@@ -34,7 +47,7 @@ function Form() {
                 handlechange={handleChange} width="col-md-6"
                 requerido={true} readonly={false}
                 textovalido="Chave API OK" textoinvalido="Informe a Chave API"
-                maximocaracteres={40} />
+                maximocaracteres={700} />
         </Dialogo>
     )
 }

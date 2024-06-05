@@ -10,7 +10,7 @@ function Configuracoes() {
 
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [carregando, setCarregando] = useState(false);
-    const [objeto, setObjeto] = useState({ codigo: "", nome: "", senha: "", email: "" });
+    const [objeto, setObjeto] = useState({ codigo: "", nome: "", senha: "", email: "" , novaSenha: "" });
 
     const getUsuarioObj = async () => {
         setAlerta({ status: "", message: "" });
@@ -19,10 +19,10 @@ function Configuracoes() {
         setCarregando(false);
         if (usr == null) {
             setAlerta({ status: "error", message: "Erro ao buscar dados" });
-            setObjeto({ codigo: "", nome: "", senha: "", email: "" });
+            setObjeto({ codigo: "", nome: "", senha: "", email: "" , novaSenha: "" });
         } else {
             setObjeto({
-                codigo: usr.codigo, nome: usr.nome, senha: usr.senha, email: usr.email
+                codigo: usr.codigo, nome: usr.nome, senha: "", email: usr.email, novaSenha: ""
             })
         }
     }

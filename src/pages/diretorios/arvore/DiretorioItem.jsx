@@ -63,6 +63,17 @@ const ItemArvoreAddRoot = styled(TreeItem)(({ theme }) => ({
     },
 }));
 
+function copyContent(content) {
+    var copyFrom = document.createElement("textarea");
+    copyFrom.textContent = content;
+    document.body.appendChild(copyFrom);
+    copyFrom.select();
+    document.execCommand('copy');
+    copyFrom.blur();
+    document.body.removeChild(copyFrom);
+    alert("CID copiado para a área de transferência");
+}
+
 const btnStyle = {
     minWidth: 0
 }
@@ -89,7 +100,7 @@ export function DiretorioAddItem({ parentId }) {
 
 export default function DiretorioItem({ obj, children }) {
 
-    const { editarObjeto, remover, editarArquivo, removerArquivo } = useContext(DiretorioContext);
+    const { editarObjeto, remover, editarArquivo, removerArquivo, acaoDownloadArquivo } = useContext(DiretorioContext);
 
     const dirLabel = <div onClick={event => event.stopPropagation()}>
         <div>
@@ -114,14 +125,16 @@ export default function DiretorioItem({ obj, children }) {
             <InsertDriveFileIcon sx={{ margin: '-7px 5px -6px 0' }} />
             {obj.nome}{obj.formato}
             <span className="actionBtns">
-                <Button className="btn btn-sm" title="Baixar" sx={btnStyle}>
+                <Button className="btn btn-sm" title="Baixar" sx={btnStyle}
+                        onClick={() => { acaoDownloadArquivo(obj); }}>
                     <FileDownloadIcon />
                 </Button>
-                <Button className="btn btn-sm" title="Copiar CID" sx={btnStyle}>
+                <Button className="btn btn-sm" title="Copiar CID" sx={btnStyle}
+                        onClick={() => { copyContent(obj.cid); }}>
                     <TagIcon />
                 </Button>
                 <Button className="btn btn-sm" title="Remover arquivo" sx={btnStyle}
-                    onClick={() => { removerArquivo(obj.codigo); }}>
+                    onClick={() => { removerArquivo(obj.codigo, obj.cid, obj.servico); }}>
                     <DeleteOutlineOutlinedIcon />
                 </Button>
             </span>

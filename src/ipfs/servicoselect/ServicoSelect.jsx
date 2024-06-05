@@ -11,7 +11,6 @@ const ServicoSelect = (props, ref) => {
 
     const getServicoByCodigo = (codigo) => {
         let retVal = {}
-        console.log(servicos)
         servicos.forEach(ser => {
             if (ser.codigo + '' === codigo)
                 retVal = ser
@@ -21,7 +20,7 @@ const ServicoSelect = (props, ref) => {
 
     const onChange = (e) => {
         const ser = getServicoByCodigo(e.target.value);
-        createPinner(ser.endpoint, ser.key);
+        createPinner(ser);
     }
 
     const refresh = async () => {

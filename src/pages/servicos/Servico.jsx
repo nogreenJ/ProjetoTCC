@@ -19,13 +19,13 @@ function Servico() {
     const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [editar, setEditar] = useState(false);
-    const [objeto, setObjeto] = useState({ codigo: "", nome: "", endpoint: "", key: "", usuario: "" });
+    const [objeto, setObjeto] = useState({ codigo: "", nome: "", endpoint: "", key: "", usuario: "", tipo: "" });
     const [carregando, setCarregando] = useState(false);
 
     const novoObjeto = () => {
         setEditar(false);
         setAlerta({ status: "", message: "" });
-        setObjeto({ codigo: 0, nome: "", endpoint: "", key: "", usuario: getUsuario().codigo });
+        setObjeto({ codigo: 0, nome: "", endpoint: "", key: "", usuario: getUsuario().codigo, tipo: "" });
     }
 
     const editarObjeto = async codigo => {

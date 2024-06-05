@@ -24,6 +24,8 @@ function Login() {
 
     const [showPassword, setShowPassword] = useState(false);
 
+    var CryptoJS = require("crypto-js");
+
     const changeAcao = () => {
         if (isCadastro) {
             setIsCadastro(false);
@@ -37,7 +39,7 @@ function Login() {
         try {
             const body = {
                 email: email,
-                senha: senha
+                senha: CryptoJS.SHA1(senha).toString()
             };
             setCarregando(true);
             await fetch(`${process.env.REACT_APP_ENDERECO_API}/login`, {
@@ -67,7 +69,7 @@ function Login() {
             const body = {
                 nome: nome,
                 email: email,
-                senha: senha
+                senha: CryptoJS.SHA1(senha).toString()
             };
             await fetch(`${process.env.REACT_APP_ENDERECO_API}/cadastro`, {
                 method: "POST",

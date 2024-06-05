@@ -43,13 +43,18 @@ function Form() {
                     maximocaracteres={40} classes="w-50" />
                 <CampoEntrada id="txtNome" label="Nome" tipo="text"
                     name="nome" value={objeto ? objeto.nome : ''} width="col-md-8"
-                    requerido={true} readonly={false} handlechange={handleChange}
-                    textovalido="Nome OK" textoinvalido="Informe o nome"
+                    requerido={false} readonly={false} handlechange={handleChange}
+                    textovalido="Nome OK" 
                     maximocaracteres={40} classes="w-50" />
-                <CampoEntrada id="txtSenha" label="Senha" tipo="password"
+                <CampoEntrada id="txtNovaSenha" label="Nova Senha" tipo="password"
+                    name="novaSenha" value={objeto ? objeto.novaSenha : ''} width="col-md-3"
+                    requerido={false} readonly={false} handlechange={handleChange}
+                    textovalido="Nova Senha OK"
+                    maximocaracteres={40} classes="w-50" />
+                <CampoEntrada id="txtSenha" label="Senha Atual" tipo="password"
                     name="senha" value={objeto ? objeto.senha : ''} width="col-md-3"
                     requerido={true} readonly={false} handlechange={handleChange}
-                    textovalido="Senha OK" textoinvalido="Informe a senha"
+                    textovalido="Senha OK" textoinvalido="Informe a sua senha"
                     maximocaracteres={40} classes="w-50" />
                 <div className="w-50" style={{ textAlign: 'center' }}>
                     <Button type="submit" className="w-25 btn btn-lg btn-outline-primary text-primary">
