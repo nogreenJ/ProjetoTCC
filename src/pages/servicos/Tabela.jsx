@@ -21,7 +21,7 @@ function Tabela() {
                     <tr>
                         <th scope="col">Código</th>
                         <th scope="col">Nome</th>
-                        <th scope="col">Endpoint</th>
+                        <th scope="col">Provedor</th>
                         <th scope="col" style={{ textAlign: 'center' }}>Ações</th>
                     </tr>
                 </thead>
@@ -30,7 +30,7 @@ function Tabela() {
                         <tr key={objeto.codigo}>
                             <td>{objeto.codigo}</td>
                             <td>{objeto.nome}</td>
-                            <td>{objeto.endpoint}</td>
+                            <td>{objeto.tipo}</td>
                             <td align="center">
                                 <button className="btn btn-info" title="Editar"
                                     onClick={() => editarObjeto(objeto.codigo)}

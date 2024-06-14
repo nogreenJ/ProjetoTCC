@@ -1,18 +1,7 @@
 import { useEffect, useState } from "react";
 import HeliaContext from "./HeliaContext";
-import { LevelDatastore } from 'datastore-level'
-import { LevelBlockstore } from 'blockstore-level'
-import { noise } from '@chainsafe/libp2p-noise'
-import { yamux } from '@chainsafe/libp2p-yamux'
-import { strings } from '@helia/strings'
-import { bootstrap } from '@libp2p/bootstrap'
-import { webSockets } from '@libp2p/websockets'
-import { MemoryBlockstore } from 'blockstore-core'
-import { MemoryDatastore } from 'datastore-core'
-import { createHelia } from 'helia'
-import { createLibp2p } from 'libp2p'
-import { CID } from 'multiformats/cid';
-
+import crypto from "../../crypto"
+import { getToken, getUsuario } from "../../seguranca/Autenticacao";
 
 /*const helia = await createHelia()
 const heliaStrings = strings(helia)*/
@@ -41,9 +30,11 @@ const Helia = (props) => {
                 alert('Sem serviço de pinning selecionado!');
                 return;
             }
-            const hexFile = buf2hex(new Uint8Array(content.binaryStr)).toString();
-            let res = null
+            let hexFile = buf2hex(new Uint8Array(content.binaryStr)).toString();
+            hexFile = new Blob([hexFile]);
+            hexFile = await crypto.encryptFile(hexFile, pinner.sc_key);
             if(pinner && hexFile){
+                let res = {servico: pinner.id}
                 if(pinner.tipo == 1){
                     const form = new FormData();
                     form.append("file", new Blob([hexFile]));
@@ -62,11 +53,11 @@ const Helia = (props) => {
                     await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', options)
                             .then(response => response.json())
                             .then(ret => {
-                                res = {cid: ret.IpfsHash}
+                                res.cid = ret.IpfsHash;
                             })
                             .catch(err => {
                                 console.error(err)
-                                res = {cid:null}
+                                res.cid = null;
                             });
                     return res;
                 }

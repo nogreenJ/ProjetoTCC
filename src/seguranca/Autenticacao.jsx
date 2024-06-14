@@ -1,21 +1,17 @@
 import jwt_decode from 'jwt-decode';
 
-const NOMEAPP = 'joaodirproj';
+const NOMEAPP = 'syphonio';
 
 export const getToken = () => {
     const localStorageAutenticacao = localStorage.getItem(NOMEAPP + '/autenticacao');
     const autenticacao = localStorageAutenticacao ?
         JSON.parse(localStorageAutenticacao) : null;
-    if (autenticacao == null) {
-        return null;
-    }
-    if (autenticacao.auth === false) {
+    if (autenticacao == null || autenticacao.auth === false) {
         return null;
     } else {
         var decoded = jwt_decode(autenticacao.token);
         if (decoded.exp <= Math.floor(new Date() / 1000)) {
             logout();
-            alert('Token Expirado');
             return null;
         } else {
             return autenticacao.token;
@@ -27,18 +23,30 @@ export const getUsuario = () => {
     const localStorageAutenticacao = localStorage.getItem(NOMEAPP + '/autenticacao');
     const autenticacao = localStorageAutenticacao ?
         JSON.parse(localStorageAutenticacao) : null;
-    if (autenticacao == null) {
-        return null;
-    }
-    if (autenticacao.auth === false) {
+    if (autenticacao == null || autenticacao.auth === false) {
         return null;
     } else {
         var decoded = jwt_decode(autenticacao.token);
         if (decoded.exp <= Math.floor(new Date() / 1000)) {
             logout();
-            alert('Token Expirado');
         } else {
             return decoded.usuario;
+        }
+    }
+}
+
+export const getUserKey = () => {
+    const localStorageAutenticacao = localStorage.getItem(NOMEAPP + '/autenticacao');
+    const autenticacao = localStorageAutenticacao ?
+        JSON.parse(localStorageAutenticacao) : null;
+    if (autenticacao == null || autenticacao.auth === false) {
+        return null;
+    } else {
+        var decoded = jwt_decode(autenticacao.token);
+        if (decoded.exp <= Math.floor(new Date() / 1000)) {
+            logout();
+        } else {
+            return autenticacao.key;
         }
     }
 }

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { gravaAutenticacao, getToken } from "../../seguranca/Autenticacao";
+import { getUsuario, gravaAutenticacao, getToken } from "../../seguranca/Autenticacao";
 import Carregando from "../../components/common/Carregando";
 import Alerta from "../../components/common/Alerta";
 import './signin.css';
@@ -11,6 +11,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import InputGroup from 'react-bootstrap/InputGroup';
 import assets from "../../assets";
+import crypto from "../../crypto";
 
 function Login() {
 
@@ -23,8 +24,6 @@ function Login() {
     const [carregando, setCarregando] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
-
-    var CryptoJS = require("crypto-js");
 
     const changeAcao = () => {
         if (isCadastro) {
@@ -39,7 +38,7 @@ function Login() {
         try {
             const body = {
                 email: email,
-                senha: CryptoJS.SHA1(senha).toString()
+                senha: crypto.encryptPassword(senha)
             };
             setCarregando(true);
             await fetch(`${process.env.REACT_APP_ENDERECO_API}/login`, {
@@ -52,6 +51,7 @@ function Login() {
                     if (json.auth === false) {
                         setAlerta({ status: "error", message: json.message })
                     } else {
+                        json.key = crypto.decryptKey(json.key, senha);
                         setAutenticado(true);
                         gravaAutenticacao(json);
                         //navigate("/", { replace: true });
@@ -65,11 +65,13 @@ function Login() {
     }
 
     const acaoCadastro = async () => {
+        const sc_key = crypto.randomString(32);
         try {
             const body = {
                 nome: nome,
                 email: email,
-                senha: CryptoJS.SHA1(senha).toString()
+                senha: crypto.encryptPassword(senha),
+                sc_key: crypto.encryptKey(sc_key, senha)
             };
             await fetch(`${process.env.REACT_APP_ENDERECO_API}/cadastro`, {
                 method: "POST",
@@ -86,6 +88,7 @@ function Login() {
                     }
                 })
         } catch (err) {
+            console.log(err)
             setAlerta({ status: "error", message: err.message });
         }
     }

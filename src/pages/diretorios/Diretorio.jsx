@@ -145,7 +145,7 @@ function Diretorio() {
             if (!editar) {
                 await pinContent(arquivo)
                     .then(async (ret) => {
-                        if(ret){
+                        if(ret && ret.cid){
                             if (!ret.cid) {
                                 setAlerta({
                                     status: 'error',
@@ -154,7 +154,7 @@ function Diretorio() {
                             } else {
                                 const arq = arquivo;
                                 arq.cid = ret.cid.toString();
-                                arq.servico = 4;
+                                arq.servico = ret.servico;
                                 arq.dono = getUsuario().codigo;
                                 let retornoAPI = await cadastraArquivoServico(arq, metodo);
                                 setAlerta({

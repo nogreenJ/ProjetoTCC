@@ -2,18 +2,26 @@
 import { useState, useEffect, useContext } from "react";
 import ServicoSelectContext from "./ServicoSelectContext";
 import { getServicoServico } from "../../servicos/ServicoServico";
+import { getUserKey } from "../../seguranca/Autenticacao";
 import HeliaContext from "../helia/HeliaContext";
+import crypto from "../../crypto";
 
 const ServicoSelect = (props, ref) => {
 
+    const userKey = getUserKey();
     const { createPinner } = useContext(HeliaContext)
     const [servicos, setServicos] = useState([]);
 
     const getServicoByCodigo = (codigo) => {
         let retVal = {}
         servicos.forEach(ser => {
-            if (ser.codigo + '' === codigo)
+            if (ser.codigo + '' === codigo){
                 retVal = ser
+                if(retVal.sc_key){
+                    retVal.sc_key = 
+                        crypto.decryptKey(retVal.sc_key, userKey);
+                }
+            }
         });
         return retVal;
     }

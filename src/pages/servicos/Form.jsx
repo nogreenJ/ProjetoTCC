@@ -36,17 +36,16 @@ function Form() {
                         Piñata
                     </option>
             </CampoSelect>
-            <CampoEntrada id="txtEndpoint" label="Endpoint" tipo="text"
-                name="endpoint" value={objeto ? objeto.endpoint : ''}
-                handlechange={handleChange} width="col-md-6"
-                requerido={false} readonly={false}
-                textovalido="Endpoint OK" textoinvalido="Informe o endpoint"
-                maximocaracteres={200} />
-            <CampoEntrada id="txtKey" label="Chave" tipo="password"
+            <CampoEntrada id="txtKey" label="Chave API" tipo="password"
                 name="key" value={objeto ? objeto.key : ''}
                 handlechange={handleChange} width="col-md-6"
                 requerido={true} readonly={false}
                 textovalido="Chave API OK" textoinvalido="Informe a Chave API"
+                maximocaracteres={700} />
+            <CampoEntrada id="txtScKey" label="Segredo" tipo="password"
+                name="sc_key" value={objeto ? objeto.sc_key : ''}
+                handlechange={handleChange} width="col-md-6"
+                requerido={false} readonly={true}
                 maximocaracteres={700} />
         </Dialogo>
     )
