@@ -1,6 +1,7 @@
+//import { Buffer } from "buffer";
 
 const CryptoJS = require("crypto-js");
-const appKey = process.env.APPKEY;
+//const appKey = process.env.APPKEY;
 
 const encryptPassword = (senha: string) =>{
     return CryptoJS.SHA3(senha, { outputLength: 128 }).toString();
@@ -13,7 +14,7 @@ const encryptFile = (data: any, key: any) =>{
     console.log("with:")
     console.log(key)
     var wordArray = CryptoJS.lib.WordArray.create(data); 
-    var encrypted = CryptoJS.AES.encrypt(wordArray, key).toString();
+    var encrypted = CryptoJS.RC4.encrypt(wordArray, key).toString();
     console.log("encrypted: ")
     console.log(encrypted)
     return encrypted;
@@ -25,12 +26,13 @@ const decryptFile = (data: any, key: any) =>{
     console.log(data)
     console.log("with:")
     console.log(key)
-    var decrypted = CryptoJS.AES.decrypt(data, key);
+    var decrypted = CryptoJS.RC4.decrypt(data, key);
     var typedArray = convertWordArrayToUint8Array(decrypted);
     console.log("decrypted: ")
     console.log(typedArray)
     return typedArray;
 }
+
 
 function convertWordArrayToUint8Array(wordArray: any) {
     var arrayOfWords = wordArray.hasOwnProperty("words") ? wordArray.words : [];

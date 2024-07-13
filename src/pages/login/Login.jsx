@@ -113,7 +113,7 @@ function Login() {
             <Carregando carregando={carregando}>
                 <div>
                     <div className="text-center">
-                        <img src={assets.images.logo_full_light} style={{ height: 'auto', width: '25%' }} />
+                        <img src={assets.images.logo_full_light} style={{ height: 'auto', width: '25%' }} alt={"Logo do Syphon.io"}/>
                         <main className="form-signin">
                             <form onSubmit={acaoLogin} style={{ width: 300, marginLeft: 30 }}>
                                 {isCadastro && <div className="form-floating">

@@ -7,8 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import '@popperjs/core/dist/cjs/popper.js'
 import 'bootstrap/dist/js/bootstrap.min.js'
 
-
-const style = {
+/*const style = {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -18,11 +17,11 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
-};
+};*/
 
 export default function FormDiretorio({ parent }) {
 
-    const { editar, objeto, handleChangeObj, acaoCadastrar, getListaObjetosSemSelf } = useContext(DiretorioContext);
+    const { objeto, handleChangeObj, acaoCadastrar, getListaObjetosSemSelf } = useContext(DiretorioContext);
 
     parent = parent ? parent : (objeto ? objeto.parent : "");
 

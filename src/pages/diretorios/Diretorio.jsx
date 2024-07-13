@@ -120,6 +120,11 @@ function Diretorio() {
     }
 
     const onChangeArquivo = (novoArq, binaryStr) => {
+        if(!novoArq || !binaryStr){
+            activeFile = null;
+            setArquivo({ ...arquivo, 'nome': "", 'formato':  "", 'binaryStr':  ""});
+            return;
+        }
         activeFile = {
             nome: novoArq.name.split('.')[0], binary: binaryStr,
             formato: ('.' + novoArq.name.split('.')[1])
@@ -131,7 +136,6 @@ function Diretorio() {
         e.preventDefault();
         const metodo = editar ? "PUT" : "POST";
         try {
-            let ret = null;
             if (!editar) {
                 await pinContent(arquivo)
                     .then(async (ret) => {
@@ -146,6 +150,7 @@ function Diretorio() {
                             //setObjeto(retornoAPI.objeto);
                             setEditar(true);
                             recuperaDiretorios();
+                            novoArquivo(arquivo.parent);
                         } else {
                             notifications.createNotification('error', "Erro ao tentar fazer upload do arquivo.");
                         }

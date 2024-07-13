@@ -3,14 +3,12 @@ import ConfiguracoesContext from "./ConfiguracoesContext";
 import { getUsuarioServicoPorCodigoAPI, cadastraUsuarioServico } from '../../servicos/UsuarioServico';
 import Carregando from "../../components/common/Carregando";
 import WithAuth from "../../seguranca/WithAuth";
-import { logout, getUsuario, getUserKey } from "../../seguranca/Autenticacao";
+import { logout, getUsuario } from "../../seguranca/Autenticacao";
 import Form from "./Form";
-import crypto from "../../crypto";
 //import notifications from "../../notifications";
 
 function Configuracoes() {
 
-    const userKey = getUserKey();
     const [carregando, setCarregando] = useState(false);
     const [objeto, setObjeto] = useState({ codigo: "", nome: "", senha: "", email: "" , novaSenha: "" , novaChave: "" });
 

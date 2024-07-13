@@ -2,7 +2,6 @@ import { useContext } from "react";
 import CampoEntrada from '../../components/common/CampoEntrada';
 import Button from '@mui/material/Button';
 import ConfiguracoesContext from "./ConfiguracoesContext";
-import Dialogo from '../../components/common/Dialogo';
 
 function Form() {
 

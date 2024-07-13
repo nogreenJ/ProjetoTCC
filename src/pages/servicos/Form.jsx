@@ -24,7 +24,7 @@ function Form() {
                 maximocaracteres={40} />
             <CampoSelect id="txtTipo" label="Provedor"
                     name="tipo" value={objeto ? objeto.tipo : 0}
-                    requerido={false} classes="w-50"
+                    requerido={true} classes="w-50"
                     handlechange={handleChange}
                     textovalido="Provedor OK">
                     <option key="" value="">
@@ -36,10 +36,10 @@ function Form() {
             </CampoSelect>
             <CampoEntrada id="txtKey" label="Chave API" tipo="password"
                 name="key" value={objeto ? objeto.key : ''}
-                handlechange={handleChange} width="col-md-6"
+                handlechange={handleChange} width="col-md-9"
                 requerido={true} readonly={false}
                 textovalido="Chave API OK" textoinvalido="Informe a Chave API"
-                maximocaracteres={700} />
+                maximocaracteres={1000} />
         </Dialogo>
     )
 }

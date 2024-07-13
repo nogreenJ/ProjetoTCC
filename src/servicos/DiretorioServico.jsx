@@ -1,8 +1,6 @@
-import { getToken, getUsuario } from "../seguranca/Autenticacao";
+import { getToken } from "../seguranca/Autenticacao";
 
 export const getDiretorioServico = async () => {
-    const user = getUsuario().codigo;
-
     const response =
         await fetch(`${process.env.REACT_APP_ENDERECO_API}/diretorio`,
             {

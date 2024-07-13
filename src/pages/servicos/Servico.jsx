@@ -48,6 +48,7 @@ function Servico() {
     const acaoCadastrar = async e => {
         e.preventDefault();
         const metodo = editar ? "PUT" : "POST";
+        console.log(e)
         try {
             if(!userKey) return;
             let servico = objeto;
@@ -59,10 +60,12 @@ function Servico() {
                 setEditar(true);
             }
         } catch (err) {
-            window.location.reload();
-            navigate("/servicos", { replace: true });
+            console.log(err);
         }
+        //$(e.target).hide();
         recuperaServicos();
+        //window.location.reload();
+        //navigate("/servicos", { replace: true });
     }
 
     const recuperaServicos = async () => {
@@ -84,7 +87,8 @@ function Servico() {
     const remover = async codigo => {
         try {
             if (window.confirm('Deseja remover este objeto')) {
-                let retornoAPI = await deleteServicoServico(codigo);
+                //let retornoAPI = 
+                await deleteServicoServico(codigo);
                 //notifications.createNotification(retornoAPI.status, retornoAPI.message);
                 recuperaServicos();
             }

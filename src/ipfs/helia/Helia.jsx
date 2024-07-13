@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import HeliaContext from "./HeliaContext";
 import crypto from "../../crypto"
 import { getUserKey } from "../../seguranca/Autenticacao";
-import { FilebaseClient, File } from '@filebase/client'
+import { FilebaseClient } from '@filebase/client'
 //import notifications from "../../notifications";
 
 /*const helia = await createHelia()
@@ -10,10 +10,6 @@ const heliaStrings = strings(helia)*/
 const Helia = (props) => {
 
     const userKey = getUserKey();
-    const [started, setStarted] = useState(false);
-    const [libP2P, setLibP2P] = useState(false);
-    //const [client, setClient] = useState(null);
-    //const [heliaStrings, setHeliaStrings] = useState(null);
     let pinner = null;
 
     const createPinner = async (servico) => {
@@ -39,10 +35,14 @@ const Helia = (props) => {
             let hexFile = buf2hex(uint).toString();
             hexFile = await crypto.encryptFile(hexFile, userKey);
             var fileEnc = new Blob([hexFile]);
+            if(!pinner){
+                alert("NÃO TEM PINNER")
+                return
+            }
             if(pinner && hexFile){
                 let res = {servico: pinner.codigo}
                 //Pinata
-                if(pinner.tipo == 1){
+                if(pinner.tipo === 1){
                     const form = new FormData();
                     form.append("file", fileEnc);
                     form.append("pinataMetadata", "{\n  \"name\": \""+content.nome+ "\"\n}");
@@ -63,7 +63,7 @@ const Helia = (props) => {
                             .then(ret => {
                                 if(!ret) return;
                                 if(ret.error){
-                                    if(ret.error.reason == "INVALID_CREDENTIALS"){
+                                    if(ret.error.reason === "INVALID_CREDENTIALS"){
                                         //notifications.createNotification("warning", "Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo);
                                         return;
                                     }
@@ -78,7 +78,7 @@ const Helia = (props) => {
                     return res;
                 } 
                 //Filebase
-                else if (pinner.tipo == 2){
+                else if (pinner.tipo === 2){
                     const filebaseClient = new FilebaseClient({ token: key })
                     await filebaseClient.storeBlob(fileEnc).then(cid => {
                         if(!cid){
@@ -109,7 +109,7 @@ const Helia = (props) => {
                 res.msg = 'Sem serviço de pinning selecionado!';
                 return res;
             }
-            if(service.tipo == 1){
+            if(service.tipo === 1){
                 const form = new FormData();
 
                 const key = crypto.decryptKey(service.key, userKey);
@@ -130,10 +130,10 @@ const Helia = (props) => {
                             if(ret.ok){
                                 res = {success: true}
                             } else if(ret.error){
-                                if(ret.error.reason == "INVALID_CREDENTIALS"){
+                                if(ret.error.reason === "INVALID_CREDENTIALS"){
                                     res = {success: false}
                                     //notifications.createNotification("warning", "Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo);
-                                } else if(ret.error.reason == "CURRENT_USER_HAS_NOT_PINNED_CID"){
+                                } else if(ret.error.reason === "CURRENT_USER_HAS_NOT_PINNED_CID"){
                                     res = {success: true}
                                     //notifications.createNotification("warning", "Conteúdo não persistido pelo seu serviço, removido do diretório.");
                                 } else {
@@ -165,10 +165,7 @@ const Helia = (props) => {
     }
 
     function download(hexdata, name) {
-        /*var byteArray = new Uint8Array(hexdata.length/2);
-        for (var x = 0; x < byteArray.length; x++){
-            byteArray[x] = parseInt(hexdata.substr(x*2,2), 16);
-        }*/
+        hexdata = buf2hex(hexdata).toString();
         var blob = new Blob([hexdata], {type: "application/octet-stream"});
 
         const url = window.URL.createObjectURL(blob);

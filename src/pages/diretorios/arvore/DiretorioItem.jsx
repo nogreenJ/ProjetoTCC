@@ -101,7 +101,7 @@ export function DiretorioAddItem({ parentId }) {
 
 export default function DiretorioItem({ obj, children }) {
 
-    const { editarObjeto, remover, editarArquivo, removerArquivo, acaoDownloadArquivo } = useContext(DiretorioContext);
+    const { editarObjeto, remover, removerArquivo, acaoDownloadArquivo } = useContext(DiretorioContext);
 
     const dirLabel = <div onClick={event => event.stopPropagation()}>
         <div>
@@ -155,7 +155,7 @@ export default function DiretorioItem({ obj, children }) {
     }  else if (obj.cid){
         return (
             <ItemArvore
-                key={obj.codigo * 11}
+                key={obj.codigo}
                 nodeId={obj.codigo + 'arq'}
                 label={arqLabel}
             />
