@@ -1,21 +1,19 @@
 import { useContext } from "react";
 import ServicoContext from "./ServicoContext";
-import Alerta from '../../components/common/Alerta';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import AddIcon from '@mui/icons-material/Add';
 
 function Tabela() {
 
-    const { alerta, listaObjetos, remover, novoObjeto, editarObjeto } = useContext(ServicoContext);
+    const { listaObjetos, remover, novoObjeto, editarObjeto } = useContext(ServicoContext);
 
     const btnStyle = {
         fontSize: 20,
-        color: 'white'
+        color: 'white',
     }
     return (
         <div style={{ padding: '20px' }}>
-            <Alerta alerta={alerta} />
             <table className="table">
                 <thead>
                     <tr>

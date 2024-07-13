@@ -1,7 +1,12 @@
 import { useState, useCallback } from "react";
 import { useDropzone } from 'react-dropzone'
+import crypto from "../../crypto"
+import { getUserKey } from "../../seguranca/Autenticacao";
 
 function FileField({ id, name, width, requerido, textovalido, textoinvalido, onChange, handlechange }) {
+
+    const userKey = getUserKey();
+
     const [activeFile, setActiveFile] = useState({ nome: '', binary: '', formato: '' });
 
     const onDrop = useCallback(acceptedFiles => {
@@ -9,8 +14,8 @@ function FileField({ id, name, width, requerido, textovalido, textoinvalido, onC
         acceptedFiles.forEach((file) => {
             const reader = new FileReader()
 
-            reader.onabort = () => console.log('file reading was aborted')
-            reader.onerror = () => console.log('file reading has failed')
+            reader.onabort = () => console.log('upload de arquivo abortado')
+            reader.onerror = () => console.log('erro no upload de arquivo')
             reader.onload = () => {
                 const binaryStr = reader.result
                 /*setActiveFile({
@@ -21,7 +26,11 @@ function FileField({ id, name, width, requerido, textovalido, textoinvalido, onC
             }
             reader.readAsArrayBuffer(file)
         })
-    }, [])
+    }, []);
+
+    const clearFile = () =>{
+        setActiveFile({});
+    }
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 

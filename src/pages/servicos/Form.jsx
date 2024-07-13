@@ -1,5 +1,4 @@
 import { useContext } from 'react'
-import Alerta from '../../components/common/Alerta';
 import ServicoContext from './ServicoContext';
 import CampoEntrada from '../../components/common/CampoEntrada';
 import Dialogo from '../../components/common/Dialogo';
@@ -7,12 +6,11 @@ import CampoSelect from '../../components/common/CampoSelect';
 
 function Form() {
 
-    const { objeto, handleChange, acaoCadastrar, alerta } = useContext(ServicoContext);
+    const { objeto, handleChange, acaoCadastrar } = useContext(ServicoContext);
 
     return (
         <Dialogo id="modalEdicao" titulo="Serviço" idformulario="formEdicao"
             acaoCadastrar={acaoCadastrar}>
-            <Alerta alerta={alerta} />
             <CampoEntrada id="txtCodigo" label="Código" tipo="number"
                 name="codigo" value={objeto ? objeto.codigo : 0}
                 handlechange={handleChange} width="col-md-3"
@@ -41,11 +39,6 @@ function Form() {
                 handlechange={handleChange} width="col-md-6"
                 requerido={true} readonly={false}
                 textovalido="Chave API OK" textoinvalido="Informe a Chave API"
-                maximocaracteres={700} />
-            <CampoEntrada id="txtScKey" label="Segredo" tipo="password"
-                name="sc_key" value={objeto ? objeto.sc_key : ''}
-                handlechange={handleChange} width="col-md-6"
-                requerido={false} readonly={true}
                 maximocaracteres={700} />
         </Dialogo>
     )

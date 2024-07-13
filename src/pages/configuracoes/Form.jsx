@@ -1,5 +1,4 @@
 import { useContext } from "react";
-import Alerta from '../../components/common/Alerta';
 import CampoEntrada from '../../components/common/CampoEntrada';
 import Button from '@mui/material/Button';
 import ConfiguracoesContext from "./ConfiguracoesContext";
@@ -7,7 +6,7 @@ import Dialogo from '../../components/common/Dialogo';
 
 function Form() {
 
-    const { alerta, objeto, salvarDados, sair, handleChange } = useContext(ConfiguracoesContext);
+    const { objeto, salvarDados, sair, handleChange } = useContext(ConfiguracoesContext);
 
     (() => {
         // Fetch all the forms we want to apply custom Bootstrap validation styles to
@@ -28,10 +27,8 @@ function Form() {
 
     return (
         <div style={{ marginTop: '-16px' }}>
-            <Alerta alerta={alerta} />
             <form id="formEdicao" onSubmit={salvarDados}
                 className="needs-validation" noValidate>
-                <Alerta alerta={alerta} />
                 <CampoEntrada id="txtCodigo" label="Código" tipo="number"
                     name="codigo" value={objeto ? objeto.codigo : 0} width="col-md-3"
                     requerido={false} readonly={true} handlechange={handleChange}

@@ -5,6 +5,7 @@ const colorConfigs = {
     dark: '#233044',
     light: '6192ba',
     white: '#e8eaf6',
+    lightList: '#e6e6fa',
   },
   sidebar: {
     bg: "#233044",

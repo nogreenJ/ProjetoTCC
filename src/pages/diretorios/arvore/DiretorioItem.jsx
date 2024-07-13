@@ -1,17 +1,18 @@
-import { useContext } from 'react'
-import DiretorioContext from '../DiretorioContext';
-import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
-import FolderIcon from '@mui/icons-material/Folder';
 import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import TagIcon from '@mui/icons-material/Tag';
-import { styled } from "@mui/material/styles";
-import Button from '@mui/material/Button';
-import colorConfigs from "../../../configs/colorConfigs";
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
+import FolderIcon from '@mui/icons-material/Folder';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+import TagIcon from '@mui/icons-material/Tag';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
+import Button from '@mui/material/Button';
+import { styled } from "@mui/material/styles";
+import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
+import { useContext } from 'react';
+import colorConfigs from "../../../configs/colorConfigs";
+//import notifications from "../../../notifications";
+import DiretorioContext from '../DiretorioContext';
 
 const ItemArvorePai = styled(TreeItem)(({ theme }) => ({
     [`& .${treeItemClasses.content}, .${treeItemClasses.content}`]: {
@@ -35,11 +36,11 @@ const ItemArvorePai = styled(TreeItem)(({ theme }) => ({
 
 const ItemArvore = styled(TreeItem)(({ theme }) => ({
     [`& .${treeItemClasses.content}`]: {
-        backgroundColor: colorConfigs.pallette.sexta + " !important",
         borderRadius: theme.shape.borderRadius,
-        paddingTop: 3,
-        paddingBottom: 3,
-        height: 20,
+        paddingTop: 4,
+        paddingBottom: 4,
+        marginTop: 8,
+        height: 30,
         '&:hover': {
             cursor: 'default',
         },
@@ -71,7 +72,7 @@ function copyContent(content) {
     document.execCommand('copy');
     copyFrom.blur();
     document.body.removeChild(copyFrom);
-    alert("CID copiado para a área de transferência");
+    //notifications.createNotification("info", "CID copiado para a área de transferência.");
 }
 
 const btnStyle = {
@@ -151,21 +152,21 @@ export default function DiretorioItem({ obj, children }) {
                 children={children}
             />
         )
-    } else if (!obj.formato) {
+    }  else if (obj.cid){
+        return (
+            <ItemArvore
+                key={obj.codigo * 11}
+                nodeId={obj.codigo + 'arq'}
+                label={arqLabel}
+            />
+        )
+    } else {
         return (
             <ItemArvore
                 key={obj.codigo}
                 nodeId={obj.codigo + ''}
                 label={dirLabel}
                 children={children}
-            />
-        )
-    } else {
-        return (
-            <ItemArvore
-                key={obj.codigo * 11}
-                nodeId={obj.codigo + 'arq'}
-                label={arqLabel}
             />
         )
     }

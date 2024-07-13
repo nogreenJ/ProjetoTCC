@@ -1,5 +1,4 @@
 import { useContext } from 'react'
-import Alerta from '../../components/common/Alerta';
 import DiretorioContext from './DiretorioContext';
 import CampoEntrada from '../../components/common/CampoEntrada';
 import CampoSelect from '../../components/common/CampoSelect';
@@ -23,7 +22,7 @@ const style = {
 
 export default function FormDiretorio({ parent }) {
 
-    const { editar, objeto, handleChangeObj, acaoCadastrar, alerta, getListaObjetosSemSelf } = useContext(DiretorioContext);
+    const { editar, objeto, handleChangeObj, acaoCadastrar, getListaObjetosSemSelf } = useContext(DiretorioContext);
 
     parent = parent ? parent : (objeto ? objeto.parent : "");
 
@@ -31,7 +30,6 @@ export default function FormDiretorio({ parent }) {
         <div style={{ marginLeft: '-20px' }}>
             <Dialogo id="modalEdicaoDir" titulo="Diretorio" idformulario="formEdicaoDir"
                 acaoCadastrar={acaoCadastrar} modal={true}>
-                <Alerta alerta={alerta} />
                 <div>
                     <CampoEntrada id="txtCodigo" label="Código" tipo="number"
                         name="codigo" value={objeto ? objeto.codigo : 0}

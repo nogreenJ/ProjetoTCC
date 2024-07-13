@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import HeliaContext from "./HeliaContext";
 import crypto from "../../crypto"
-import { getToken, getUsuario } from "../../seguranca/Autenticacao";
+import { getUserKey } from "../../seguranca/Autenticacao";
+import { FilebaseClient, File } from '@filebase/client'
+//import notifications from "../../notifications";
 
 /*const helia = await createHelia()
 const heliaStrings = strings(helia)*/
 const Helia = (props) => {
+
+    const userKey = getUserKey();
     const [started, setStarted] = useState(false);
     const [libP2P, setLibP2P] = useState(false);
     //const [client, setClient] = useState(null);
@@ -23,43 +27,69 @@ const Helia = (props) => {
     const pinContent = async (content) => {
         try {
             if (!content) {
-                alert('Arquivo não informado!');
+                //notifications.createNotification('warning', "Arquivo não informado!");
                 return;
             }
             if (!pinner || !pinner.key) {
-                alert('Sem serviço de pinning selecionado!');
+                //notifications.createNotification("warning", "Serviço de pinning não selecionado!");
                 return;
             }
-            let hexFile = buf2hex(new Uint8Array(content.binaryStr)).toString();
-            hexFile = new Blob([hexFile]);
-            hexFile = await crypto.encryptFile(hexFile, pinner.sc_key);
+            const key = crypto.decryptKey(pinner.key, userKey);
+            const uint = new Uint8Array(content.binaryStr);
+            let hexFile = buf2hex(uint).toString();
+            hexFile = await crypto.encryptFile(hexFile, userKey);
+            var fileEnc = new Blob([hexFile]);
             if(pinner && hexFile){
-                let res = {servico: pinner.id}
+                let res = {servico: pinner.codigo}
+                //Pinata
                 if(pinner.tipo == 1){
                     const form = new FormData();
-                    form.append("file", new Blob([hexFile]));
+                    form.append("file", fileEnc);
                     form.append("pinataMetadata", "{\n  \"name\": \""+content.nome+ "\"\n}");
                     form.append("pinataOptions", "{\n  \"cidVersion\": 1\n}");
 
                     const options = {
                         method: 'POST',
                         headers: {
-                            Authorization: `Bearer ${pinner.key}`
+                            Authorization: `Bearer ${key}`
                         }
                     };
 
                     options.body = form;
 
                     await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', options)
-                            .then(response => response.json())
+                            .then(response => {
+                                return response.json()})
                             .then(ret => {
+                                if(!ret) return;
+                                if(ret.error){
+                                    if(ret.error.reason == "INVALID_CREDENTIALS"){
+                                        //notifications.createNotification("warning", "Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo);
+                                        return;
+                                    }
+                                    res.cid = null;
+                                    return;
+                                }
                                 res.cid = ret.IpfsHash;
                             })
                             .catch(err => {
-                                console.error(err)
                                 res.cid = null;
                             });
                     return res;
+                } 
+                //Filebase
+                else if (pinner.tipo == 2){
+                    const filebaseClient = new FilebaseClient({ token: key })
+                    await filebaseClient.storeBlob(fileEnc).then(cid => {
+                        if(!cid){
+                            //notifications.createNotification("warning", "Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo);
+                            return;
+                        }
+                        res.cid = cid;
+                    })
+                    .catch(err => {
+                        res.cid = null;
+                    });
                 }
             }
             return {};
@@ -82,18 +112,36 @@ const Helia = (props) => {
             if(service.tipo == 1){
                 const form = new FormData();
 
+                const key = crypto.decryptKey(service.key, userKey);
                 const options = {
                     method: 'DELETE',
                     headers: {
-                        Authorization: `Bearer ${service.key}`
+                        Authorization: `Bearer ${key}`
                     }
                 }
 
                 options.body = form;
 
                 await fetch('https://api.pinata.cloud/pinning/unpin/' + hash, options)
+                        .then(response => {
+                            if(response.ok) return {ok: true}
+                            return response.json()})
                         .then(ret => {
-                            res = {success: ret ? ret.ok : false}
+                            if(ret.ok){
+                                res = {success: true}
+                            } else if(ret.error){
+                                if(ret.error.reason == "INVALID_CREDENTIALS"){
+                                    res = {success: false}
+                                    //notifications.createNotification("warning", "Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo);
+                                } else if(ret.error.reason == "CURRENT_USER_HAS_NOT_PINNED_CID"){
+                                    res = {success: true}
+                                    //notifications.createNotification("warning", "Conteúdo não persistido pelo seu serviço, removido do diretório.");
+                                } else {
+                                    res = {success: false}
+                                }
+                            } else {
+                                res = {success: false}
+                            }
                         })
                         .catch(err => {
                             res = {success: false}
@@ -107,17 +155,21 @@ const Helia = (props) => {
 
     const downloadContent = async (obj) => {
         await fetch('https://ipfs.io/ipfs/' + obj.cid)
-                .then(res => res.blob())
+                .then(async res =>  {
+                    const blob = await res.blob();
+                    return blob;
+                })
                 .then(res => res.text())
+                .then(res => crypto.decryptFile(res, userKey))
                 .then(txt => download(txt, obj.nome + obj.formato));
     }
 
     function download(hexdata, name) {
-        var byteArray = new Uint8Array(hexdata.length/2);
+        /*var byteArray = new Uint8Array(hexdata.length/2);
         for (var x = 0; x < byteArray.length; x++){
             byteArray[x] = parseInt(hexdata.substr(x*2,2), 16);
-        }
-        var blob = new Blob([byteArray], {type: "application/octet-stream"});
+        }*/
+        var blob = new Blob([hexdata], {type: "application/octet-stream"});
 
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');

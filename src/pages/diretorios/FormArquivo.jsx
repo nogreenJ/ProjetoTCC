@@ -1,5 +1,4 @@
 import { useContext } from 'react'
-import Alerta from '../../components/common/Alerta';
 import DiretorioContext from './DiretorioContext';
 import CampoEntrada from '../../components/common/CampoEntrada';
 import CampoSelect from '../../components/common/CampoSelect';
@@ -11,7 +10,7 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 
 export default function FormArquivo({ parent }) {
 
-    const { editar, arquivo, handleChangeArq, acaoCadastraArquivo, alerta, getListaObjetosSemSelf, onChangeArquivo } = useContext(DiretorioContext);
+    const { editar, arquivo, handleChangeArq, acaoCadastraArquivo, getListaObjetosSemSelf, onChangeArquivo } = useContext(DiretorioContext);
 
     parent = parent ? parent : (arquivo ? arquivo.parent : "");
 
@@ -19,7 +18,6 @@ export default function FormArquivo({ parent }) {
         <div style={{ marginLeft: '-20px' }}>
             <Dialogo id="modalEdicaoArq" titulo="Arquivo" idformulario="formEdicaoArq"
                 acaoCadastrar={acaoCadastraArquivo} modal={true}>
-                <Alerta alerta={alerta} />
                 <div>
                     <CampoEntrada id="txtCodigoArq" label="Código" tipo="number"
                         name="codigo" value={arquivo.codigo}

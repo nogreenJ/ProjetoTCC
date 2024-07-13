@@ -1,17 +1,18 @@
-import { useState, useEffect } from "react";
-import { getUsuario, gravaAutenticacao, getToken } from "../../seguranca/Autenticacao";
-import Carregando from "../../components/common/Carregando";
-import Alerta from "../../components/common/Alerta";
-import './signin.css';
-import MainLayout from "../../components/layout/MainLayout";
-import 'bootstrap/dist/css/bootstrap.min.css'
-import '@popperjs/core/dist/cjs/popper.js'
-import 'bootstrap/dist/js/bootstrap.min.js'
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import '@popperjs/core/dist/cjs/popper.js';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import { useEffect, useState } from "react";
 import InputGroup from 'react-bootstrap/InputGroup';
 import assets from "../../assets";
+import Carregando from "../../components/common/Carregando";
+import MainLayout from "../../components/layout/MainLayout";
 import crypto from "../../crypto";
+////import notifications from "../../notifications";
+import { getToken, gravaAutenticacao } from "../../seguranca/Autenticacao";
+import { useNavigate } from "react-router-dom";
+import './signin.css';
 
 function Login() {
 
@@ -19,11 +20,11 @@ function Login() {
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [autenticado, setAutenticado] = useState(false);
     const [carregando, setCarregando] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
+    let navigate = useNavigate();
 
     const changeAcao = () => {
         if (isCadastro) {
@@ -47,31 +48,31 @@ function Login() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(body)
             }).then(response => response.json())
-                .then(json => {
-                    if (json.auth === false) {
-                        setAlerta({ status: "error", message: json.message })
-                    } else {
-                        json.key = crypto.decryptKey(json.key, senha);
-                        setAutenticado(true);
-                        gravaAutenticacao(json);
-                        //navigate("/", { replace: true });
-                    }
-                })
+            .then(json => {
+                if (json.auth === false) {
+                    ////notifications.createNotification("error", json.message);
+                } else {
+                    json.key = crypto.decryptKey(json.key, senha)
+                    setAutenticado(true);
+                    gravaAutenticacao(json);
+                    navigate("/", { replace: true });
+                }
+            });
         } catch (err) {
-            setAlerta({ status: "error", message: err.message });
+            console.log(err)
+            ////notifications.createNotification("error", err.message);
         } finally {
             setCarregando(false);
         }
     }
 
     const acaoCadastro = async () => {
-        const sc_key = crypto.randomString(32);
         try {
             const body = {
                 nome: nome,
                 email: email,
                 senha: crypto.encryptPassword(senha),
-                sc_key: crypto.encryptKey(sc_key, senha)
+                sc_key: crypto.encryptKey(crypto.generateScKeyUsuario(), senha)
             };
             await fetch(`${process.env.REACT_APP_ENDERECO_API}/cadastro`, {
                 method: "POST",
@@ -81,23 +82,22 @@ function Login() {
             }).then(response => response.json())
                 .then(json => {
                     if (json.success === false) {
-                        setAlerta({ status: "error", message: json.message })
+                        ////notifications.createNotification("error", json.message);
                     } else {
-                        setAlerta({ status: "success", message: "Cadastro realizado!" });
+                        ////notifications.createNotification("success", "Cadastro realizado!");
                         changeAcao();
                     }
                 })
         } catch (err) {
-            console.log(err)
-            setAlerta({ status: "error", message: err.message });
-        }
+            ////notifications.createNotification("error", err.message);
+    }
     }
 
     useEffect(() => {
         try {
             setAutenticado(getToken() != null);
         } catch (err) {
-            setAlerta({ status: "error", message: err });
+            ////notifications.createNotification("error", err);
         }
     }, [])
 
@@ -121,7 +121,7 @@ function Login() {
                                         <span style={{ display: 'flex' }}>
                                             <label className="form-label" style={labelStyle}>Nome</label>
                                             <input type="text" className="form-control" id="floatingInput" placeholder="Nome de usuário"
-                                                value={nome}
+                                                value={nome} required={isCadastro}
                                                 name="nome" style={inputStyle}
                                                 onChange={e => setNome(e.target.value)} />
                                         </span>
@@ -131,7 +131,7 @@ function Login() {
                                     <span style={{ display: 'flex' }}>
                                         <label className="form-label" style={labelStyle}>Email</label>
                                         <input type="text" className="form-control" id="floatingInput" placeholder="Email"
-                                            value={email}
+                                            value={email} required={true}
                                             name="email" style={inputStyle}
                                             onChange={e => setEmail(e.target.value)} />
                                     </span>
@@ -142,7 +142,7 @@ function Login() {
 
                                         <InputGroup className="mb-3">
                                             <input className="form-control" id="floatingPassword"
-                                                value={senha} placeholder="Senha"
+                                                value={senha} placeholder="Senha" required={true}
                                                 name="senha" style={inputStyle}
                                                 type={showPassword ? "text" : "password"}
                                                 onChange={e => setSenha(e.target.value)} />
@@ -179,7 +179,6 @@ function Login() {
                                 </div>
                             </form>
                         </main>
-                        <Alerta alerta={alerta} />
                     </div>
                 </div>
             </Carregando>

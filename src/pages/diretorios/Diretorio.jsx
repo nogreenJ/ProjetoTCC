@@ -1,24 +1,25 @@
-import { useState, useEffect, useRef, useContext } from "react";
-import DiretorioContext from "./DiretorioContext";
+import { useContext, useEffect, useState } from "react";
 import {
-    getDiretorioArquivoServico, getDiretorioServicoPorCodigoAPI,
-    deleteDiretorioServico, cadastraDiretorioServico,
-    getArquivoServicoPorCodigoAPI, cadastraArquivoServico,
-    deleteArquivoServico
-}
-    from '../../servicos/DiretorioServico';
+    cadastraArquivoServico,
+    cadastraDiretorioServico,
+    deleteArquivoServico,
+    deleteDiretorioServico,
+    getArquivoServicoPorCodigoAPI,
+    getDiretorioArquivoServico, getDiretorioServicoPorCodigoAPI
+} from '../../servicos/DiretorioServico';
+import DiretorioContext from "./DiretorioContext";
     
-import {getServicoServicoPorCodigoAPI} from '../../servicos/ServicoServico';
-import Tabela from "./Tabela";
-import Carregando from "../../components/common/Carregando";
-import WithAuth from "../../seguranca/WithAuth";
-import { getUsuario } from "../../seguranca/Autenticacao";
 import { useNavigate } from "react-router-dom";
-import DiretorioItem from "./arvore/DiretorioItem";
-import { DiretorioAddItem } from "./arvore/DiretorioItem";
-import FormDiretorio from "./FormDiretorio";
-import FormArquivo from "./FormArquivo";
+import Carregando from "../../components/common/Carregando";
 import HeliaContext from "../../ipfs/helia/HeliaContext";
+import notifications from "../../notifications";
+import { getUsuario } from "../../seguranca/Autenticacao";
+import WithAuth from "../../seguranca/WithAuth";
+import { getServicoServicoPorCodigoAPI } from '../../servicos/ServicoServico';
+import FormArquivo from "./FormArquivo";
+import FormDiretorio from "./FormDiretorio";
+import Tabela from "./Tabela";
+import DiretorioItem, { DiretorioAddItem } from "./arvore/DiretorioItem";
 
 
 function Diretorio() {
@@ -27,7 +28,6 @@ function Diretorio() {
 
     const { pinContent, deleteContent, downloadContent } = useContext(HeliaContext)
 
-    const [alerta, setAlerta] = useState({ status: "", message: "" });
     const [listaObjetos, setListaObjetos] = useState([]);
     const [editar, setEditar] = useState(false);
     const [arquivo, setArquivo] = useState({ codigo: "", nome: "", formato: "", parent: "", dono: "", criptografia: "", cid: "" , servico: "" });
@@ -37,14 +37,12 @@ function Diretorio() {
 
     const novoObjeto = async (parentId) => {
         setEditar(false);
-        setAlerta({ status: "", message: "" });
         setObjeto({ codigo: 0, nome: "", parent: (parentId ? parentId : ""), usuario: getUsuario().codigo });
     }
 
     const editarObjeto = async codigo => {
         try {
             setEditar(true);
-            setAlerta({ status: "", message: "" });
             setObjeto(await getDiretorioServicoPorCodigoAPI(codigo));
         } catch (err) {
             window.location.reload();
@@ -54,14 +52,12 @@ function Diretorio() {
 
     const novoArquivo = async (parentId) => {
         setEditar(false);
-        setAlerta({ status: "", message: "" });
         setArquivo({ codigo: "", nome: "", formato: "", parent: (parentId ? parentId : ""), dono: getUsuario().codigo, criptografia: "", cid: "" });
     }
 
     const editarArquivo = async codigo => {
         try {
             setEditar(true);
-            setAlerta({ status: "", message: "" });
             setObjeto(await getArquivoServicoPorCodigoAPI(codigo));
         } catch (err) {
             window.location.reload();
@@ -112,19 +108,13 @@ function Diretorio() {
         const metodo = editar ? "PUT" : "POST";
         try {
             let retornoAPI = await cadastraDiretorioServico(objeto, metodo);
-            setAlerta({
-                status: retornoAPI.status,
-                message: retornoAPI.message
-            });
+            notifications.createNotification(retornoAPI.status, retornoAPI.message);
             setObjeto(retornoAPI.objeto);
             if (!editar) {
                 setEditar(true);
             }
         } catch (err) {
-            setAlerta({
-                status: 'error',
-                message: 'Erro: ' + err
-            });
+            notifications.createNotification('error', err);
         }
         recuperaDiretorios();
     }
@@ -146,41 +136,28 @@ function Diretorio() {
                 await pinContent(arquivo)
                     .then(async (ret) => {
                         if(ret && ret.cid){
-                            if (!ret.cid) {
-                                setAlerta({
-                                    status: 'error',
-                                    message: "Erro ao tentar fazer upload do arquivo."
-                                });
-                            } else {
-                                const arq = arquivo;
-                                arq.cid = ret.cid.toString();
-                                arq.servico = ret.servico;
-                                arq.dono = getUsuario().codigo;
-                                let retornoAPI = await cadastraArquivoServico(arq, metodo);
-                                setAlerta({
-                                    status: retornoAPI.status,
-                                    message: retornoAPI.message
-                                });
-                                //setObjeto(retornoAPI.objeto);
-                            }
+                            const arq = arquivo;
+                            arq.binaryStr = "";
+                            arq.cid = ret.cid.toString();
+                            arq.servico = ret.servico;
+                            arq.dono = getUsuario().codigo;
+                            let retornoAPI = await cadastraArquivoServico(arq, metodo);
+                            notifications.createNotification(retornoAPI.status, retornoAPI.message);
+                            //setObjeto(retornoAPI.objeto);
                             setEditar(true);
                             recuperaDiretorios();
+                        } else {
+                            notifications.createNotification('error', "Erro ao tentar fazer upload do arquivo.");
                         }
                     });                
             } else {
                 let retornoAPI = await cadastraArquivoServico(arquivo, metodo);
-                setAlerta({
-                    status: retornoAPI.status,
-                    message: retornoAPI.message
-                });
+                notifications.createNotification(retornoAPI.status, retornoAPI.message);
                 setObjeto(retornoAPI.objeto);
                 recuperaDiretorios();
             }
         } catch (err) {
-            setAlerta({
-                status: 'error',
-                message: 'Erro: ' + err
-            });
+            notifications.createNotification('error', err);
         }
     }
 
@@ -196,10 +173,7 @@ function Diretorio() {
             if(lista && !lista.status){
                 setListaObjetos(lista);
             } else {
-                setAlerta({
-                    status: lista.status,
-                    message: lista.message
-                });
+                notifications.createNotification(lista.status, lista.message);
             }
             setCarregando(false);
         } catch (err) {
@@ -212,10 +186,7 @@ function Diretorio() {
         try {
             if (window.confirm('Deseja deletar este diretório?')) {
                 let retornoAPI = await deleteDiretorioServico(codigo);
-                setAlerta({
-                    status: retornoAPI.status,
-                    message: retornoAPI.message
-                });
+                notifications.createNotification(retornoAPI.status, retornoAPI.message);
                 recuperaDiretorios();
             }
         } catch (err) {
@@ -232,16 +203,10 @@ function Diretorio() {
                     .then( async res => {
                         if(res.success){
                             let retornoAPI = await deleteArquivoServico(codigo);
-                            setAlerta({
-                                status: retornoAPI.status,
-                                message: retornoAPI.message
-                            });
+                            notifications.createNotification(retornoAPI.status, retornoAPI.message);
                             recuperaDiretorios();
                         } else {
-                            setAlerta({
-                                status: "error",
-                                message: "Erro ao deletar arquivo."
-                            });
+                            notifications.createNotification("error", "Erro ao deletar arquivo.");
                         }
                     });
             }
@@ -269,7 +234,7 @@ function Diretorio() {
 
     return (
         <DiretorioContext.Provider value={{
-            alerta, setAlerta, listaObjetos, remover,
+            listaObjetos, remover,
             objeto, editar, acaoCadastrar, getListaObjetosSemSelf, getListFromData,
             arquivo, getTreeItemsFromData, handleChangeObj, handleChangeArq, novoObjeto, editarObjeto,
             removerArquivo, acaoCadastraArquivo, novoArquivo, editarArquivo, onChangeArquivo, acaoDownloadArquivo

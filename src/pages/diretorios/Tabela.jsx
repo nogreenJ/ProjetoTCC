@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import DiretorioContext from "./DiretorioContext";
-import Alerta from '../../components/common/Alerta';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { TreeView } from '@mui/x-tree-view/TreeView';
@@ -28,11 +27,10 @@ const theme = createTheme({
 
 function Tabela() {
 
-    const { alerta, getTreeItemsFromData } = useContext(DiretorioContext);
+    const { getTreeItemsFromData } = useContext(DiretorioContext);
 
     return (
         <div style={{ marginTop: '-16px' }}>
-            <Alerta alerta={alerta} />
             <TreeView
                 key="keyRoot"
                 aria-label="file system navigator"
