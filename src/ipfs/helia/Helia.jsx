@@ -37,10 +37,6 @@ const Helia = (props) => {
             let hexFile = buf2hex(uint).toString();
             hexFile = await crypto.encryptFile(hexFile, userKey);
             var fileEnc = new Blob([hexFile]);
-            if(!pinner){
-                alert("NÃO TEM PINNER")
-                return
-            }
             if(pinner && hexFile){
                 let res = {servico: pinner.codigo}
                 //Pinata
@@ -59,7 +55,8 @@ const Helia = (props) => {
 
                     options.body = form;
 
-                    await fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', options)
+                    await toast.promise(
+                        fetch('https://api.pinata.cloud/pinning/pinFileToIPFS', options)
                             .then(response => {
                                 return response.json()})
                             .then(ret => {
@@ -78,7 +75,11 @@ const Helia = (props) => {
                             })
                             .catch(err => {
                                 res.cid = null;
-                            });
+                            }),
+                        {pending: 'Realizando upload...'},
+                        {position: "bottom-right"}
+                    );
+                    //await 
                     return res;
                 } 
                 //Filebase
@@ -128,7 +129,8 @@ const Helia = (props) => {
 
                 options.body = form;
 
-                await fetch('https://api.pinata.cloud/pinning/unpin/' + hash, options)
+                await toast.promise(
+                    fetch('https://api.pinata.cloud/pinning/unpin/' + hash, options)
                         .then(response => {
                             if(response.ok) return {ok: true}
                             return response.json()})
@@ -155,7 +157,10 @@ const Helia = (props) => {
                         })
                         .catch(err => {
                             res = {success: false}
-                        });
+                        }),
+                        {pending: 'Excluindo arquivo...'},
+                        {position: "bottom-right"}
+                    );
             }
             return res;
         } catch (e) {
@@ -164,14 +169,19 @@ const Helia = (props) => {
     }
 
     const downloadContent = async (obj) => {
-        await fetch('https://ipfs.io/ipfs/' + obj.cid)
+        await toast.promise(
+            fetch('https://ipfs.io/ipfs/' + obj.cid)
                 .then(async res =>  {
                     const blob = await res.blob();
                     return blob;
                 })
                 .then(res => res.text())
                 .then(res => crypto.decryptFile(res, userKey))
-                .then(txt => download(txt, obj.nome + obj.formato));
+                .then(txt => download(txt, obj.nome + obj.formato)),
+                {pending: 'Baixando arquivo, aguarde...'},
+                {position: "bottom-right"}
+            );
+
     }
 
     function download(hexdata, name) {

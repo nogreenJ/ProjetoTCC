@@ -147,7 +147,7 @@ function Diretorio() {
                             arq.servico = ret.servico;
                             arq.dono = getUsuario().codigo;
                             let retornoAPI = await cadastraArquivoServico(arq, metodo);
-                            toast.success(retornoAPI.message, {
+                            toast.success("Upload realizado!", {
                                 position: "bottom-right"
                             });
                             //setObjeto(retornoAPI.objeto);
@@ -176,8 +176,7 @@ function Diretorio() {
     }
 
     const acaoDownloadArquivo = async (arq) =>{
-        //const arq = await getArquivoServicoPorCodigoAPI(codigo);
-        downloadContent(arq)
+        downloadContent(arq);
     }
 
     const recuperaDiretorios = async () => {
@@ -208,7 +207,6 @@ function Diretorio() {
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
-            
             /*toast.success(retornoAPI.message, {
                 position: "bottom-right"
             });*/
