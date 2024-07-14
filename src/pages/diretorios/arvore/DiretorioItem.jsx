@@ -11,8 +11,8 @@ import { styled } from "@mui/material/styles";
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { useContext } from 'react';
 import colorConfigs from "../../../configs/colorConfigs";
-//import notifications from "../../../notifications";
 import DiretorioContext from '../DiretorioContext';
+import { toast } from 'react-toastify';
 
 const ItemArvorePai = styled(TreeItem)(({ theme }) => ({
     [`& .${treeItemClasses.content}, .${treeItemClasses.content}`]: {
@@ -72,7 +72,9 @@ function copyContent(content) {
     document.execCommand('copy');
     copyFrom.blur();
     document.body.removeChild(copyFrom);
-    //notifications.createNotification("info", "CID copiado para a área de transferência.");
+    toast.info("CID copiado para a área de transferência.", {
+        position: "bottom-right"
+    });
 }
 
 const btnStyle = {

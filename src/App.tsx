@@ -3,6 +3,7 @@ import { getToken } from './seguranca/Autenticacao';
 import { routes } from './routes';
 import MainLayout from "./components/layout/MainLayout";
 import "./app.css";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           {getToken != null ? routes : null}
         </Route>
       </Routes>
+      <ToastContainer autoClose={5000} />
     </BrowserRouter>
   );
 }

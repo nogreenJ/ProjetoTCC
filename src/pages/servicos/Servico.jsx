@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Carregando from "../../components/common/Carregando";
 import servicesConfigs from "../../configs/servicesConfigs";
 import crypto from "../../crypto";
-//import notifications from "../../notifications";
 import { getUserKey, getUsuario } from "../../seguranca/Autenticacao";
 import WithAuth from "../../seguranca/WithAuth";
 import {
@@ -14,6 +13,7 @@ import {
 import Form from "./Form";
 import ServicoContext from "./ServicoContext";
 import Tabela from "./Tabela";
+import { toast } from "react-toastify";
 
 function Servico() {
 
@@ -54,7 +54,9 @@ function Servico() {
             let servico = objeto;
             servico.key = crypto.encryptKey(servico.key, userKey);
             let retornoAPI = await cadastraServicoServico(servico, metodo);
-            //notifications.createNotification(retornoAPI.status, retornoAPI.message); 
+            toast.success(retornoAPI.message, {
+                position: "bottom-right"
+            });
             setObjeto(retornoAPI.objeto);
             if (!editar) {
                 setEditar(true);
@@ -87,9 +89,10 @@ function Servico() {
     const remover = async codigo => {
         try {
             if (window.confirm('Deseja remover este objeto')) {
-                //let retornoAPI = 
-                await deleteServicoServico(codigo);
-                //notifications.createNotification(retornoAPI.status, retornoAPI.message);
+                let retornoAPI = await deleteServicoServico(codigo);
+                toast.success(retornoAPI.message, {
+                    position: "bottom-right"
+                });
                 recuperaServicos();
             }
         } catch (err) {

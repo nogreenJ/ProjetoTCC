@@ -9,9 +9,9 @@ import assets from "../../assets";
 import Carregando from "../../components/common/Carregando";
 import MainLayout from "../../components/layout/MainLayout";
 import crypto from "../../crypto";
-////import notifications from "../../notifications";
 import { getToken, gravaAutenticacao } from "../../seguranca/Autenticacao";
 import { useNavigate } from "react-router-dom";
+import { toast } from 'react-toastify';
 import './signin.css';
 
 function Login() {
@@ -50,7 +50,9 @@ function Login() {
             }).then(response => response.json())
             .then(json => {
                 if (json.auth === false) {
-                    ////notifications.createNotification("error", json.message);
+                    toast.error(json.message, {
+                        position: "bottom-right"
+                    });
                 } else {
                     json.key = crypto.decryptKey(json.key, senha)
                     setAutenticado(true);
@@ -60,7 +62,9 @@ function Login() {
             });
         } catch (err) {
             console.log(err)
-            ////notifications.createNotification("error", err.message);
+            toast.error(err.message, {
+                position: "bottom-right"
+            });
         } finally {
             setCarregando(false);
         }
@@ -82,22 +86,30 @@ function Login() {
             }).then(response => response.json())
                 .then(json => {
                     if (json.success === false) {
-                        ////notifications.createNotification("error", json.message);
+                        toast.error(json.message, {
+                            position: "bottom-right"
+                        });
                     } else {
-                        ////notifications.createNotification("success", "Cadastro realizado!");
+                        toast.success("Cadastro realizado!", {
+                            position: "bottom-right"
+                        });
                         changeAcao();
                     }
                 })
         } catch (err) {
-            ////notifications.createNotification("error", err.message);
-    }
+            toast.error(err.message, {
+                position: "bottom-right"
+            });
+        }
     }
 
     useEffect(() => {
         try {
             setAutenticado(getToken() != null);
         } catch (err) {
-            ////notifications.createNotification("error", err);
+            toast.error(err, {
+                position: "bottom-right"
+            });
         }
     }, [])
 

@@ -5,7 +5,7 @@ import Carregando from "../../components/common/Carregando";
 import WithAuth from "../../seguranca/WithAuth";
 import { logout, getUsuario } from "../../seguranca/Autenticacao";
 import Form from "./Form";
-//import notifications from "../../notifications";
+import { toast } from "react-toastify";
 
 function Configuracoes() {
 
@@ -17,7 +17,9 @@ function Configuracoes() {
         const usr = await getUsuarioServicoPorCodigoAPI(getUsuario().codigo);
         setCarregando(false);
         if (usr == null) {
-            //notifications.createNotification('error', "Erro ao buscar dados.");
+            toast.error("Erro ao buscar dados", {
+                position: "bottom-right"
+            });
             setObjeto({ codigo: "", nome: "", senha: "", email: "" , novaSenha: "" , novaChave: ""});
         } else {
             setObjeto({

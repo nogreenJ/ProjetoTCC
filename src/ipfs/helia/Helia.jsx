@@ -3,10 +3,8 @@ import HeliaContext from "./HeliaContext";
 import crypto from "../../crypto"
 import { getUserKey } from "../../seguranca/Autenticacao";
 import { FilebaseClient } from '@filebase/client'
-//import notifications from "../../notifications";
+import { toast } from 'react-toastify';
 
-/*const helia = await createHelia()
-const heliaStrings = strings(helia)*/
 const Helia = (props) => {
 
     const userKey = getUserKey();
@@ -23,11 +21,15 @@ const Helia = (props) => {
     const pinContent = async (content) => {
         try {
             if (!content) {
-                //notifications.createNotification('warning', "Arquivo não informado!");
+                toast.warning("Arquivo não informado!", {
+                    position: "bottom-right"
+                });
                 return;
             }
             if (!pinner || !pinner.key) {
-                //notifications.createNotification("warning", "Serviço de pinning não selecionado!");
+                toast.warning("Serviço de pinning não selecionado!", {
+                    position: "bottom-right"
+                });
                 return;
             }
             const key = crypto.decryptKey(pinner.key, userKey);
@@ -64,7 +66,9 @@ const Helia = (props) => {
                                 if(!ret) return;
                                 if(ret.error){
                                     if(ret.error.reason === "INVALID_CREDENTIALS"){
-                                        //notifications.createNotification("warning", "Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo);
+                                        toast.warning("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
+                                            position: "bottom-right"
+                                        });
                                         return;
                                     }
                                     res.cid = null;
@@ -82,7 +86,9 @@ const Helia = (props) => {
                     const filebaseClient = new FilebaseClient({ token: key })
                     await filebaseClient.storeBlob(fileEnc).then(cid => {
                         if(!cid){
-                            //notifications.createNotification("warning", "Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo);
+                            toast.warning("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
+                                position: "bottom-right"
+                            });
                             return;
                         }
                         res.cid = cid;
@@ -132,10 +138,14 @@ const Helia = (props) => {
                             } else if(ret.error){
                                 if(ret.error.reason === "INVALID_CREDENTIALS"){
                                     res = {success: false}
-                                    //notifications.createNotification("warning", "Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo);
+                                    toast.warning("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
+                                        position: "bottom-right"
+                                    });
                                 } else if(ret.error.reason === "CURRENT_USER_HAS_NOT_PINNED_CID"){
                                     res = {success: true}
-                                    //notifications.createNotification("warning", "Conteúdo não persistido pelo seu serviço, removido do diretório.");
+                                    toast.warning("Conteúdo não persistido pelo seu serviço, removido do diretório.", {
+                                        position: "bottom-right"
+                                    });
                                 } else {
                                     res = {success: false}
                                 }

@@ -8,11 +8,9 @@ import {
     getDiretorioArquivoServico, getDiretorioServicoPorCodigoAPI
 } from '../../servicos/DiretorioServico';
 import DiretorioContext from "./DiretorioContext";
-    
+import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-import Carregando from "../../components/common/Carregando";
 import HeliaContext from "../../ipfs/helia/HeliaContext";
-import notifications from "../../notifications";
 import { getUsuario } from "../../seguranca/Autenticacao";
 import WithAuth from "../../seguranca/WithAuth";
 import { getServicoServicoPorCodigoAPI } from '../../servicos/ServicoServico';
@@ -33,7 +31,6 @@ function Diretorio() {
     const [arquivo, setArquivo] = useState({ codigo: "", nome: "", formato: "", parent: "", dono: "", criptografia: "", cid: "" , servico: "" });
     let activeFile = null;
     const [objeto, setObjeto] = useState({ codigo: "", nome: "", parent: "", usuario: "" });
-    const [carregando, setCarregando] = useState(false);
 
     const novoObjeto = async (parentId) => {
         setEditar(false);
@@ -108,13 +105,17 @@ function Diretorio() {
         const metodo = editar ? "PUT" : "POST";
         try {
             let retornoAPI = await cadastraDiretorioServico(objeto, metodo);
-            notifications.createNotification(retornoAPI.status, retornoAPI.message);
+            toast.success(retornoAPI.message, {
+                position: "bottom-right"
+            });
             setObjeto(retornoAPI.objeto);
             if (!editar) {
                 setEditar(true);
             }
         } catch (err) {
-            notifications.createNotification('error', err);
+            toast.error(err, {
+                position: "bottom-right"
+            });
         }
         recuperaDiretorios();
     }
@@ -146,23 +147,31 @@ function Diretorio() {
                             arq.servico = ret.servico;
                             arq.dono = getUsuario().codigo;
                             let retornoAPI = await cadastraArquivoServico(arq, metodo);
-                            notifications.createNotification(retornoAPI.status, retornoAPI.message);
+                            toast.success(retornoAPI.message, {
+                                position: "bottom-right"
+                            });
                             //setObjeto(retornoAPI.objeto);
                             setEditar(true);
                             recuperaDiretorios();
                             novoArquivo(arquivo.parent);
                         } else {
-                            notifications.createNotification('error', "Erro ao tentar fazer upload do arquivo.");
+                            toast.error("Erro ao tentar fazer upload do arquivo", {
+                                position: "bottom-right"
+                            });
                         }
                     });                
             } else {
                 let retornoAPI = await cadastraArquivoServico(arquivo, metodo);
-                notifications.createNotification(retornoAPI.status, retornoAPI.message);
+                toast.success(retornoAPI.message, {
+                    position: "bottom-right"
+                });
                 setObjeto(retornoAPI.objeto);
                 recuperaDiretorios();
             }
         } catch (err) {
-            notifications.createNotification('error', err);
+            toast.error(err, {
+                position: "bottom-right"
+            });
         }
     }
 
@@ -173,14 +182,14 @@ function Diretorio() {
 
     const recuperaDiretorios = async () => {
         try {
-            setCarregando(true);
             const lista = await getDiretorioArquivoServico();
             if(lista && !lista.status){
                 setListaObjetos(lista);
             } else {
-                notifications.createNotification(lista.status, lista.message);
+                toast.success(lista.message, {
+                    position: "bottom-right"
+                });
             }
-            setCarregando(false);
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
@@ -191,12 +200,18 @@ function Diretorio() {
         try {
             if (window.confirm('Deseja deletar este diretório?')) {
                 let retornoAPI = await deleteDiretorioServico(codigo);
-                notifications.createNotification(retornoAPI.status, retornoAPI.message);
+                toast.success(retornoAPI.message, {
+                    position: "bottom-right"
+                });
                 recuperaDiretorios();
             }
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
+            
+            /*toast.success(retornoAPI.message, {
+                position: "bottom-right"
+            });*/
         }
     }
 
@@ -208,10 +223,14 @@ function Diretorio() {
                     .then( async res => {
                         if(res.success){
                             let retornoAPI = await deleteArquivoServico(codigo);
-                            notifications.createNotification(retornoAPI.status, retornoAPI.message);
+                            toast.success(retornoAPI.message, {
+                                position: "bottom-right"
+                            });
                             recuperaDiretorios();
                         } else {
-                            notifications.createNotification("error", "Erro ao deletar arquivo.");
+                            toast.error("Erro ao deletar arquivo", {
+                                position: "bottom-right"
+                            });
                         }
                     });
             }
@@ -244,9 +263,7 @@ function Diretorio() {
             arquivo, getTreeItemsFromData, handleChangeObj, handleChangeArq, novoObjeto, editarObjeto,
             removerArquivo, acaoCadastraArquivo, novoArquivo, editarArquivo, onChangeArquivo, acaoDownloadArquivo
         }}>
-            <Carregando carregando={carregando}>
-                <Tabela />
-            </Carregando>
+            <Tabela />
             <FormDiretorio />
             <FormArquivo />
         </DiretorioContext.Provider>
