@@ -28,7 +28,7 @@ export default function Form({ parent }) {
 
     return (
         <div style={{ marginLeft: '-20px' }}>
-            <Dialogo id="modalEdicao" titulo="Diretorio" idformulario="formEdicao"
+            <Dialogo id="modalEdicao" titulo="Diretório" idformulario="formEdicao"
                 acaoCadastrar={acaoCadastrar} modal={true}>
                 <div>
                     <CampoEntrada id="txtCodigo" label="Código" tipo="number"

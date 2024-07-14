@@ -27,7 +27,7 @@ export default function FormDiretorio({ parent }) {
 
     return (
         <div style={{ marginLeft: '-20px' }}>
-            <Dialogo id="modalEdicaoDir" titulo="Diretorio" idformulario="formEdicaoDir"
+            <Dialogo id="modalEdicaoDir" titulo="Diretório" idformulario="formEdicaoDir"
                 acaoCadastrar={acaoCadastrar} modal={true}>
                 <div>
                     <CampoEntrada id="txtCodigo" label="Código" tipo="number"

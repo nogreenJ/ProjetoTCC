@@ -14,6 +14,7 @@ import Form from "./Form";
 import ServicoContext from "./ServicoContext";
 import Tabela from "./Tabela";
 import { toast } from "react-toastify";
+import { confirmAlert } from "react-confirm-alert";
 
 function Servico() {
 
@@ -88,13 +89,26 @@ function Servico() {
 
     const remover = async codigo => {
         try {
-            if (window.confirm('Deseja remover este objeto')) {
-                let retornoAPI = await deleteServicoServico(codigo);
-                toast.success(retornoAPI.message, {
-                    position: "bottom-right"
-                });
-                recuperaServicos();
-            }
+            confirmAlert({
+                title: 'Deletar serviço',
+                message: 'Deseja deletar este serviço?',
+                buttons: [
+                  {
+                    label: 'Sim',
+                    onClick: async () => {
+                        let retornoAPI = await deleteServicoServico(codigo);
+                        toast.success(retornoAPI.message, {
+                            position: "bottom-right"
+                        });
+                        recuperaServicos();
+                    }
+                  },
+                  {
+                    label: 'Não',
+                    onClick: () => {}
+                  }
+                ]
+              }); 
         } catch (err) {
             window.location.reload();
             navigate("/servicos", { replace: true });

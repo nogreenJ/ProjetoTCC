@@ -1,3 +1,21 @@
 .input-group {
     width: auto !important;
 }
+
+.react-confirm-alert-button-group > button{
+    background-color: #3a5275 !important;
+}
+
+.react-confirm-alert-body {
+    color: #212529 !important;
+    font-family: "Roboto","Helvetica","Arial",sans-serif !important;
+}
+
+.react-confirm-alert{
+    margin-top: -300px !important;
+}
+
+.react-confirm-alert-overlay{
+    background: #00000080;
+}
+

@@ -18,6 +18,7 @@ import FormArquivo from "./FormArquivo";
 import FormDiretorio from "./FormDiretorio";
 import Tabela from "./Tabela";
 import DiretorioItem, { DiretorioAddItem } from "./arvore/DiretorioItem";
+import { confirmAlert } from 'react-confirm-alert';
 
 
 function Diretorio() {
@@ -197,13 +198,26 @@ function Diretorio() {
 
     const remover = async codigo => {
         try {
-            if (window.confirm('Deseja deletar este diretório?')) {
-                let retornoAPI = await deleteDiretorioServico(codigo);
-                toast.success(retornoAPI.message, {
-                    position: "bottom-right"
-                });
-                recuperaDiretorios();
-            }
+            confirmAlert({
+                title: 'Deletar diretório',
+                message: 'Deseja deletar este diretório?',
+                buttons: [
+                  {
+                    label: 'Sim',
+                    onClick: async () => {
+                        let retornoAPI = await deleteDiretorioServico(codigo);
+                        toast.success(retornoAPI.message, {
+                            position: "bottom-right"
+                        });
+                        recuperaDiretorios();
+                    }
+                  },
+                  {
+                    label: 'Não',
+                    onClick: () => {}
+                  }
+                ]
+              });
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
@@ -215,23 +229,36 @@ function Diretorio() {
 
     const removerArquivo = async (codigo, hash, servico) => {
         try {
-            if (window.confirm('Deseja deletar este arquivo?')) {
-                const pinService = await getServicoServicoPorCodigoAPI(servico);
-                await deleteContent(hash, pinService)
-                    .then( async res => {
-                        if(res.success){
-                            let retornoAPI = await deleteArquivoServico(codigo);
-                            toast.success(retornoAPI.message, {
-                                position: "bottom-right"
+            confirmAlert({
+                title: 'Deletar arquivo',
+                message: 'Deseja deletar este arquivo?',
+                buttons: [
+                  {
+                    label: 'Sim',
+                    onClick: async () => {
+                        const pinService = await getServicoServicoPorCodigoAPI(servico);
+                        await deleteContent(hash, pinService)
+                            .then( async res => {
+                                if(res.success){
+                                    let retornoAPI = await deleteArquivoServico(codigo);
+                                    toast.success(retornoAPI.message, {
+                                        position: "bottom-right"
+                                    });
+                                    recuperaDiretorios();
+                                } else {
+                                    toast.error("Erro ao deletar arquivo", {
+                                        position: "bottom-right"
+                                    });
+                                }
                             });
-                            recuperaDiretorios();
-                        } else {
-                            toast.error("Erro ao deletar arquivo", {
-                                position: "bottom-right"
-                            });
-                        }
-                    });
-            }
+                    }
+                  },
+                  {
+                    label: 'Não',
+                    onClick: () => {}
+                  }
+                ]
+              });
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
