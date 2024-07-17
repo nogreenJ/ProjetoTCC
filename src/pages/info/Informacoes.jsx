@@ -6,7 +6,7 @@ function Informacoes() {
 
     const paragraph = {
         fontSize: "22px",
-        padding: "0 100px;",
+        padding: "0 100px",
     }
 
     const aStyle = {
