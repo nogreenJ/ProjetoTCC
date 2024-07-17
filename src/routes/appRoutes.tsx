@@ -5,6 +5,8 @@ import TokenIcon from '@mui/icons-material/Token';
 import Diretorio from "../pages/diretorios/Diretorio";
 import Servico from "../pages/servicos/Servico";
 import Configuracoes from "../pages/configuracoes/Configuracoes";
+import Informacoes from "../pages/info/Informacoes";
+import { Info } from "@mui/icons-material";
 
 const appRoutes: RouteType[] = [
   {
@@ -35,6 +37,16 @@ const appRoutes: RouteType[] = [
     sidebarProps: {
       displayText: "Conta",
       icon: <Person />
+    },
+  },
+  {
+    index: true,
+    path: "/info",
+    element: <Informacoes />,
+    state: "informacoes",
+    sidebarProps: {
+      displayText: "Informações",
+      icon: <Info />
     },
   }
 ];
