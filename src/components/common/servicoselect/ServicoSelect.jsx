@@ -1,15 +1,15 @@
 
 import { useState, useEffect, useContext } from "react";
 import ServicoSelectContext from "./ServicoSelectContext";
-import { getServicoServico } from "../../servicos/ServicoServico";
-import { getUserKey } from "../../seguranca/Autenticacao";
-import HeliaContext from "../helia/HeliaContext";
-import crypto from "../../crypto";
+import { getServicoServico } from "../../../servicos/ServicoServico";
+import { getUserKey } from "../../../seguranca/Autenticacao";
+import IpfsContext from "../../../ipfs/IpfsContext";
+import crypto from "../../../crypto";
 
 const ServicoSelect = (props, ref) => {
 
     const userKey = getUserKey();
-    const { createPinner } = useContext(HeliaContext)
+    const { createPinner } = useContext(IpfsContext)
     const [servicos, setServicos] = useState([]);
 
     const getServicoByCodigo = (codigo) => {

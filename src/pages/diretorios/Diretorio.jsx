@@ -10,7 +10,7 @@ import {
 import DiretorioContext from "./DiretorioContext";
 import { toast } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
-import HeliaContext from "../../ipfs/helia/HeliaContext";
+import IpfsContext from "../../ipfs/IpfsContext";
 import { getUsuario } from "../../seguranca/Autenticacao";
 import WithAuth from "../../seguranca/WithAuth";
 import { getServicoServicoPorCodigoAPI } from '../../servicos/ServicoServico';
@@ -25,7 +25,7 @@ function Diretorio() {
 
     let navigate = useNavigate();
 
-    const { pinContent, deleteContent, downloadContent } = useContext(HeliaContext)
+    const { pinContent, deleteContent, downloadContent } = useContext(IpfsContext)
 
     const [listaObjetos, setListaObjetos] = useState([]);
     const [editar, setEditar] = useState(false);

@@ -8,7 +8,6 @@ const encryptPassword = (senha: string) =>{
 }
 
 const encryptFile = (data: any, key: any) =>{
-    //key = generateSecretKey(key);
     console.log("encrypting:")
     console.log(data)
     console.log("with:")
@@ -21,16 +20,24 @@ const encryptFile = (data: any, key: any) =>{
 }
 
 const decryptFile = (data: any, key: any) =>{
-    //key = generateSecretKey(key);
     console.log("decrypting:")
     console.log(data)
     console.log("with:")
     console.log(key)
-    var decrypted = CryptoJS.AES.decrypt(data, key);
-    var typedArray = convertWordArrayToUint8Array(decrypted);
+    var decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
+    console.log("decrypted1: ")
+    console.log(decrypted)
+    var file = decrypted.split(',');
+    console.log("decrypted2: ")
+    console.log(file)
+    var fileContent = file[1];
+    console.log("decrypted: ")
+    console.log(fileContent)
+    return fileContent;
+    /*var typedArray = convertWordArrayToUint8Array(decrypted);
     console.log("decrypted: ")
     console.log(typedArray)
-    return typedArray;
+    return typedArray;*/
 }
 
 

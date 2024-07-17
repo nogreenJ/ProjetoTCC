@@ -1,17 +1,17 @@
 import { useEffect } from "react";
-import HeliaContext from "./HeliaContext";
-import crypto from "../../crypto"
-import { getUserKey } from "../../seguranca/Autenticacao";
+import IpfsContext from "./IpfsContext";
+import crypto from "../crypto"
+import { getUserKey } from "../seguranca/Autenticacao";
 import { FilebaseClient } from '@filebase/client'
 import { toast } from 'react-toastify';
 
-const Helia = (props) => {
+const Ipfs = (props) => {
 
     const userKey = getUserKey();
     let pinner = null;
 
     const createPinner = async (servico) => {
-        if (!servico) {
+        if (!servico || !servico.codigo) {
             pinner = null;
             return
         }
@@ -205,70 +205,16 @@ const Helia = (props) => {
             .join('');
     }
 
-    useEffect( () => {        
-        /*const datastore = new MemoryDatastore(`syphon-datastore`);
-        const blockstore = new MemoryBlockstore(`syphon-blockstore`);
-
-        const fn = async () => {
-            await createLibp2p({
-                datastore,
-                addresses: {
-                    listen: [
-                        //'/ip4/127.0.0.1/tcp/0'
-                    ]
-                },
-                transports: [
-                    webSockets()
-                ],
-                connectionEncryption: [
-                    noise()
-                ],
-                streamMuxers: [
-                    yamux()
-                ],
-                peerDiscovery: [
-                    bootstrap({
-                        interval: 60e10,
-                        enabled: true,
-                        list: [
-                        '/dnsaddr/bootstrap.libp2p.io/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN',
-                        '/dnsaddr/bootstrap.libp2p.io/p2p/QmbLHAnMoJPWSCR5Zhtx6BHJX9KiKNN6tpvbUcqanj75Nb',
-                        '/dnsaddr/bootstrap.libp2p.io/p2p/QmcZf59bWwK5XFi76CZX8cbJ4BhTzzA3gU1ZjYZcYW3dwt'
-                        ]
-                    })
-                ],
-                services: {
-                    //identify: identify()
-                }
-            }).then(async (libp2pas) => {
-                await createHelia(
-                    datastore,
-                    blockstore,
-                    libp2pas
-                ).then(async (ret) => {
-                    setHelia(ret)
-                    setHeliaFs(unixfs(ret));
-                    setStarted(true);
-                    await ret.libp2p.services.dht.setMode("server");
-                });
-            })
-        };
-        fn();*/
-        /*const fn = async () => {
-            setHelia(await createHelia())
-            setHeliaStrings(strings(helia));
-            setStarted(true);
-        };
-        fn();*/
+    useEffect( () => {   
     }, []);
 
     return (
-        <HeliaContext.Provider value={{
+        <IpfsContext.Provider value={{
             pinContent, createPinner, downloadContent, deleteContent
         }}>
             {props.children}
-        </HeliaContext.Provider>
+        </IpfsContext.Provider>
     )
 }
 
-export default Helia;
+export default Ipfs;

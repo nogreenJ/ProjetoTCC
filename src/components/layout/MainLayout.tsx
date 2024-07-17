@@ -6,13 +6,13 @@ import Sidebar from "../common/Sidebar";
 import Topbar from "../common/Topbar";
 import { getToken } from "../../seguranca/Autenticacao";
 import Login from "../../pages/login/Login";
-import Helia from "../../ipfs/helia/Helia";
+import Ipfs from "../../ipfs/Ipfs";
 
 const MainLayout = () => {
   if (getToken() != null) {
     return (
       <Box sx={{ display: "flex" }}>
-        <Helia>
+        <Ipfs>
           <Topbar />
           <Box
             component="nav"
@@ -36,7 +36,7 @@ const MainLayout = () => {
             <Toolbar />
             <Outlet />
           </Box>
-        </Helia>
+        </Ipfs>
       </Box>
     );
   }

@@ -4,7 +4,7 @@ import sizeConfigs from "../../configs/sizeConfigs";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useState, useEffect } from "react";
-import ServicoSelect from "../../ipfs/servicoselect/ServicoSelect";
+import ServicoSelect from "./servicoselect/ServicoSelect";
 
 const Topbar = () => {
   const { appState } = useSelector((state: RootState) => state.appState);
