@@ -42,6 +42,10 @@ function Form() {
                     requerido={false} readonly={false} handlechange={handleChange}
                     textovalido="Nome OK" 
                     maximocaracteres={40} classes="w-50" />
+                <CampoEntrada id="txtKey" label="Chave" tipo="password"
+                    name="sc_key" value={objeto ? objeto.sc_key : ''} width="col-md-4"
+                    requerido={false} readonly={true} handlechange={handleChange}
+                    maximocaracteres={40} classes="w-50" />
                 <CampoEntrada id="txtNovaSenha" label="Nova Senha" tipo="password"
                     name="novaSenha" value={objeto ? objeto.novaSenha : ''} width="col-md-3"
                     requerido={false} readonly={false} handlechange={handleChange}

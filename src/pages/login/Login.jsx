@@ -90,6 +90,15 @@ function Login() {
                             position: "bottom-right"
                         });
                     } else {
+                        if(json.status === "warning"){
+                            console.log("json")
+                            console.log(json)
+                            console.log(json.status === "warning")
+                            toast.warn(json.msg, {
+                                position: "bottom-right"
+                            });
+                            return;
+                        }
                         toast.success("Cadastro realizado!", {
                             position: "bottom-right"
                         });

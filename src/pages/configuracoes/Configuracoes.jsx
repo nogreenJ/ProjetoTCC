@@ -6,11 +6,15 @@ import WithAuth from "../../seguranca/WithAuth";
 import { logout, getUsuario } from "../../seguranca/Autenticacao";
 import Form from "./Form";
 import { toast } from "react-toastify";
+import crypto from "../../crypto";
+import { getUserKey } from "../../seguranca/Autenticacao";
 
 function Configuracoes() {
 
+    const userKey = getUserKey();
+
     const [carregando, setCarregando] = useState(false);
-    const [objeto, setObjeto] = useState({ codigo: "", nome: "", senha: "", email: "" , novaSenha: "" , novaChave: "" });
+    const [objeto, setObjeto] = useState({ codigo: "", nome: "", senha: "", email: "" , novaSenha: "" , sc_key: userKey });
 
     const getUsuarioObj = async () => {
         setCarregando(true);
@@ -20,16 +24,19 @@ function Configuracoes() {
             toast.error("Erro ao buscar dados", {
                 position: "bottom-right"
             });
-            setObjeto({ codigo: "", nome: "", senha: "", email: "" , novaSenha: "" , novaChave: ""});
+            setObjeto({ codigo: "", nome: "", senha: "", email: "" , novaSenha: "", sc_key: userKey });
         } else {
             setObjeto({
-                codigo: usr.codigo, nome: usr.nome, senha: "", email: usr.email, novaSenha: "", novaChave: ""
+                codigo: usr.codigo, nome: usr.nome, senha: "", email: usr.email, novaSenha: "", sc_key: userKey 
             })
         }
     }
 
     const salvarDados = async () => {
         const user = objeto;
+        if(user.novaSenha){
+            user.sc_key = crypto.encryptKey(user.sc_key, user.novaSenha);
+        }
         cadastraUsuarioServico(user, 'PUT')
     }
 

@@ -14,7 +14,7 @@ const encryptFile = (data: any, key: any) =>{
     console.log("with:")
     console.log(key)
     var wordArray = CryptoJS.lib.WordArray.create(data); 
-    var encrypted = CryptoJS.RC4.encrypt(wordArray, key).toString();
+    var encrypted = CryptoJS.AES.encrypt(wordArray, key).toString();
     console.log("encrypted: ")
     console.log(encrypted)
     return encrypted;
@@ -26,7 +26,7 @@ const decryptFile = (data: any, key: any) =>{
     console.log(data)
     console.log("with:")
     console.log(key)
-    var decrypted = CryptoJS.RC4.decrypt(data, key);
+    var decrypted = CryptoJS.AES.decrypt(data, key);
     var typedArray = convertWordArrayToUint8Array(decrypted);
     console.log("decrypted: ")
     console.log(typedArray)
@@ -49,17 +49,17 @@ function convertWordArrayToUint8Array(wordArray: any) {
 }
 
 const encryptKey = (value: string, key: any) =>{
-    //console.log("encrypting key " +  value + " with " + key)
+    console.log("encrypting key " +  value + " with " + key)
     const retval = CryptoJS.AES.encrypt(value, key).toString();
-    //console.log("encrypted key: " + retval)
+    console.log("encrypted key: " + retval)
     return retval;
 }
 
 const decryptKey = (value: string, key: any) =>{
-    //console.log("decrypting key " + value + " with " + key)
+    console.log("decrypting key " + value + " with " + key)
     let retval = CryptoJS.AES.decrypt(value, key);
     retval = retval.toString(CryptoJS.enc.Utf8);
-    //console.log("decrypted key: " + retval)
+    console.log("decrypted key: " + retval)
     return retval
 }
 
@@ -76,6 +76,19 @@ function randomString(length: number) {
 }
 
 const generateScKeyUsuario = () =>{
+    var password = "test";
+
+    var iterations = 500;
+    var keySize = 256;
+    var salt = CryptoJS.lib.WordArray.random(128/8);
+
+    var output = CryptoJS.PBKDF2(password, salt, {
+        keySize: keySize/32,
+        iterations: iterations
+    });
+
+    console.log(output.toString(CryptoJS.enc.Base64));
+
     return '12345678901234561234567890123456'//crypto.randomString(32);
 }
 

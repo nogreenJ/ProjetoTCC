@@ -21,13 +21,13 @@ const Helia = (props) => {
     const pinContent = async (content) => {
         try {
             if (!content) {
-                toast.warning("Arquivo não informado!", {
+                toast.warn("Arquivo não informado!", {
                     position: "bottom-right"
                 });
                 return;
             }
             if (!pinner || !pinner.key) {
-                toast.warning("Serviço de pinning não selecionado!", {
+                toast.warn("Serviço de pinning não selecionado!", {
                     position: "bottom-right"
                 });
                 return;
@@ -63,7 +63,7 @@ const Helia = (props) => {
                                 if(!ret) return;
                                 if(ret.error){
                                     if(ret.error.reason === "INVALID_CREDENTIALS"){
-                                        toast.warning("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
+                                        toast.warn("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
                                             position: "bottom-right"
                                         });
                                         return;
@@ -87,7 +87,7 @@ const Helia = (props) => {
                     const filebaseClient = new FilebaseClient({ token: key })
                     await filebaseClient.storeBlob(fileEnc).then(cid => {
                         if(!cid){
-                            toast.warning("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
+                            toast.warn("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
                                 position: "bottom-right"
                             });
                             return;
@@ -140,12 +140,12 @@ const Helia = (props) => {
                             } else if(ret.error){
                                 if(ret.error.reason === "INVALID_CREDENTIALS"){
                                     res = {success: false}
-                                    toast.warning("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
+                                    toast.warn("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
                                         position: "bottom-right"
                                     });
                                 } else if(ret.error.reason === "CURRENT_USER_HAS_NOT_PINNED_CID"){
                                     res = {success: true}
-                                    toast.warning("Conteúdo não persistido pelo seu serviço, removido do diretório.", {
+                                    toast.warn("Conteúdo não persistido pelo seu serviço, removido do diretório.", {
                                         position: "bottom-right"
                                     });
                                 } else {
