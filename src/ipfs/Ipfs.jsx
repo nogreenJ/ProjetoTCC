@@ -33,11 +33,9 @@ const Ipfs = (props) => {
                 return;
             }
             const key = crypto.decryptKey(pinner.key, userKey);
-            const uint = new Uint8Array(content.binaryStr);
-            let hexFile = buf2hex(uint).toString();
-            hexFile = await crypto.encryptFile(hexFile, userKey);
+            const hexFile = await crypto.encryptFile(content.binaryStr, userKey);
             var fileEnc = new Blob([hexFile]);
-            if(pinner && hexFile){
+            if(pinner && fileEnc){
                 let res = {servico: pinner.codigo}
                 //Pinata
                 if(pinner.tipo === 1){
@@ -66,7 +64,6 @@ const Ipfs = (props) => {
                                         toast.warn("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
                                             position: "bottom-right"
                                         });
-                                        return;
                                     }
                                     res.cid = null;
                                     return;
@@ -79,7 +76,6 @@ const Ipfs = (props) => {
                         {pending: 'Realizando upload...'},
                         {position: "bottom-right"}
                     );
-                    //await 
                     return res;
                 } 
                 //Filebase
@@ -171,23 +167,18 @@ const Ipfs = (props) => {
     const downloadContent = async (obj) => {
         await toast.promise(
             fetch('https://ipfs.io/ipfs/' + obj.cid)
-                .then(async res =>  {
-                    const blob = await res.blob();
-                    return blob;
-                })
-                .then(res => res.text())
+                .then(async res => await res.blob())
+                .then(async res => await res.text())
                 .then(res => crypto.decryptFile(res, userKey))
-                .then(txt => download(txt, obj.nome + obj.formato)),
+                .then(data => download(data, obj.nome + obj.formato)),
                 {pending: 'Baixando arquivo, aguarde...'},
                 {position: "bottom-right"}
             );
 
     }
 
-    function download(hexdata, name) {
-        hexdata = buf2hex(hexdata).toString();
-        var blob = new Blob([hexdata], {type: "application/octet-stream"});
-
+    function download(data, name) {
+        var blob = new Blob([data]);    
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.style.display = 'none';
@@ -197,12 +188,6 @@ const Ipfs = (props) => {
         a.click();
         document.body.removeChild(a);
         window.URL.revokeObjectURL(url); 
-    }
-
-    function buf2hex(buffer) { 
-        return [...new Uint8Array(buffer)]
-            .map(x => x.toString(16).padStart(2, '0'))
-            .join('');
     }
 
     useEffect( () => {   

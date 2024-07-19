@@ -1,45 +1,22 @@
-//import { Buffer } from "buffer";
+const base64 = require("byte-base64");
 
 const CryptoJS = require("crypto-js");
-//const appKey = process.env.APPKEY;
 
 const encryptPassword = (senha: string) =>{
     return CryptoJS.SHA3(senha, { outputLength: 128 }).toString();
 }
 
-const encryptFile = (data: any, key: any) =>{
-    console.log("encrypting:")
-    console.log(data)
-    console.log("with:")
-    console.log(key)
-    var wordArray = CryptoJS.lib.WordArray.create(data); 
-    var encrypted = CryptoJS.AES.encrypt(wordArray, key).toString();
-    console.log("encrypted: ")
-    console.log(encrypted)
-    return encrypted;
+const encryptFile = (data: ArrayBuffer, key: any) =>{
+    var wordArray = CryptoJS.lib.WordArray.create(data);
+    var encrypted = CryptoJS.AES.encrypt(wordArray, key);
+    return encrypted.toString();
 }
 
 const decryptFile = (data: any, key: any) =>{
-    console.log("decrypting:")
-    console.log(data)
-    console.log("with:")
-    console.log(key)
-    var decrypted = CryptoJS.AES.decrypt(data, key).toString(CryptoJS.enc.Utf8);
-    console.log("decrypted1: ")
-    console.log(decrypted)
-    var file = decrypted.split(',');
-    console.log("decrypted2: ")
-    console.log(file)
-    var fileContent = file[1];
-    console.log("decrypted: ")
-    console.log(fileContent)
-    return fileContent;
-    /*var typedArray = convertWordArrayToUint8Array(decrypted);
-    console.log("decrypted: ")
-    console.log(typedArray)
-    return typedArray;*/
+    var decrypted = CryptoJS.AES.decrypt(data, key);
+    var uint8array = convertWordArrayToUint8Array(decrypted);
+    return uint8array;
 }
-
 
 function convertWordArrayToUint8Array(wordArray: any) {
     var arrayOfWords = wordArray.hasOwnProperty("words") ? wordArray.words : [];
@@ -56,17 +33,13 @@ function convertWordArrayToUint8Array(wordArray: any) {
 }
 
 const encryptKey = (value: string, key: any) =>{
-    console.log("encrypting key " +  value + " with " + key)
     const retval = CryptoJS.AES.encrypt(value, key).toString();
-    console.log("encrypted key: " + retval)
     return retval;
 }
 
 const decryptKey = (value: string, key: any) =>{
-    console.log("decrypting key " + value + " with " + key)
     let retval = CryptoJS.AES.decrypt(value, key);
     retval = retval.toString(CryptoJS.enc.Utf8);
-    console.log("decrypted key: " + retval)
     return retval
 }
 
@@ -94,13 +67,11 @@ const generateScKeyUsuario = () =>{
         iterations: iterations
     });
 
-    console.log(output.toString(CryptoJS.enc.Base64));
-
-    return '12345678901234561234567890123456'//crypto.randomString(32);
+    return output.toString(CryptoJS.enc.Base64);
 }
 
 const generateSecretKey = (key:string) =>{
-    var salt = //CryptoJS.lib.WordArray.random(128/8);
+    var salt = 
          {
             "sigBytes": 16,
             "words": [
@@ -108,7 +79,6 @@ const generateSecretKey = (key:string) =>{
             ],
         }
     var key128Bits = CryptoJS.PBKDF2(key, salt, { keySize: 128/32, iterations: 1000 });
-    console.log(key128Bits.toString())
     return key128Bits
 }
 
