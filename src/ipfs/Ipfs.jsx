@@ -4,6 +4,7 @@ import crypto from "../crypto"
 import { getUserKey } from "../seguranca/Autenticacao";
 import { FilebaseClient } from '@filebase/client'
 import { toast } from 'react-toastify';
+import lighthouse from '@lighthouse-web3/sdk'
 
 const Ipfs = (props) => {
 
@@ -48,7 +49,8 @@ const Ipfs = (props) => {
                         method: 'POST',
                         headers: {
                             Authorization: `Bearer ${key}`
-                        }
+                        },
+                        signal: AbortSignal.timeout(30000)
                     };
 
                     options.body = form;
@@ -81,22 +83,50 @@ const Ipfs = (props) => {
                 //Filebase
                 else if (pinner.tipo === 2){
                     const filebaseClient = new FilebaseClient({ token: key })
-                    await filebaseClient.storeBlob(fileEnc).then(cid => {
-                        if(!cid){
-                            toast.warn("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
-                                position: "bottom-right"
-                            });
-                            return;
-                        }
-                        res.cid = cid;
-                    })
+                    await toast.promise(
+                        await filebaseClient.storeBlob(fileEnc).then(cid => {
+                            console.log(cid)
+                            if(!cid){
+                                toast.warn("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
+                                    position: "bottom-right"
+                                });
+                                return;
+                            }
+                            res.cid = cid;
+                        }),
+                        {pending: 'Realizando upload...'},
+                        {position: "bottom-right"}
+                    )
                     .catch(err => {
+                        toast.error(err);
                         res.cid = null;
                     });
+                }
+                else if (pinner.tipo === 3){
+                    await toast.promise(
+                        lighthouse.upload([new File([fileEnc], content.nome)], key, false, null).then(ret => {
+                            if(!ret.data["Hash"]){
+                                toast.error("Erro de upload para o serviço " + pinner.codigo, {
+                                    position: "bottom-right"
+                                });
+                                return;
+                            }
+                            res.cid = ret.data["Hash"];
+                        }),
+                        {pending: 'Realizando upload...'},
+                        {position: "bottom-right"}
+                    )
+                    .catch(err => {
+                        toast.error(err, {position: "bottom-right"});
+                        res.cid = null;
+                    });
+                    console.log(res)
+                    return res;
                 }
             }
             return {};
         } catch (e) {
+            console.log(e)
             return e
         }
     }
@@ -157,6 +187,9 @@ const Ipfs = (props) => {
                         {pending: 'Excluindo arquivo...'},
                         {position: "bottom-right"}
                     );
+            } else if (service.tipo == 3){
+                toast.warn("O provedor Lighthouse ainda não possui funcionalidades de unpin de arquivos, o arquivo não pôde ser removido do IPFS", {position: "bottom-right"});
+                res = {success: true}
             }
             return res;
         } catch (e) {
@@ -166,11 +199,22 @@ const Ipfs = (props) => {
 
     const downloadContent = async (obj) => {
         await toast.promise(
-            fetch('https://ipfs.io/ipfs/' + obj.cid)
+            fetch('https://ipfs.io/ipfs/' + obj.cid, {signal: AbortSignal.timeout(30000)})
                 .then(async res => await res.blob())
                 .then(async res => await res.text())
                 .then(res => crypto.decryptFile(res, userKey))
-                .then(data => download(data, obj.nome + obj.formato)),
+                .then(data => download(data, obj.nome + obj.formato))
+                .catch(err => {
+                    if(err.message === "The user aborted a request."){
+                        toast.warn("A requisição expirou, talvez o conteúdo ainda não esteja " +
+                            "disponível para download ou tenha sido removido. Tente novamente " +
+                            "mais tarde ou verifique seu serviço de pinning.", 
+                            {position: "bottom-right"}
+                        );
+                        return;
+                    }
+                    toast.error("Erro ao baixar arquivo.", {position: "bottom-right"});
+                }),
                 {pending: 'Baixando arquivo, aguarde...'},
                 {position: "bottom-right"}
             );

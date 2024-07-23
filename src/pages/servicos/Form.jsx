@@ -7,6 +7,12 @@ import CampoSelect from '../../components/common/CampoSelect';
 function Form() {
 
     const { objeto, handleChange, acaoCadastrar } = useContext(ServicoContext);
+    /*
+        TODO: Implementar Filebase
+        <option key="Filebase" value="2">
+            Filebase
+        </option>
+    */
 
     return (
         <Dialogo id="modalEdicao" titulo="Serviço" idformulario="formEdicao"
@@ -32,6 +38,9 @@ function Form() {
                     </option>
                     <option key="Piñata" value="1">
                         Piñata
+                    </option>
+                    <option key="Lighthouse" value="3">
+                        Lighthouse
                     </option>
             </CampoSelect>
             <CampoEntrada id="txtKey" label="Chave API" tipo="password"

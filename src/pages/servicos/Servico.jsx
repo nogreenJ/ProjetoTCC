@@ -49,7 +49,6 @@ function Servico() {
     const acaoCadastrar = async e => {
         e.preventDefault();
         const metodo = editar ? "PUT" : "POST";
-        console.log(e)
         try {
             if(!userKey) return;
             let servico = objeto;
