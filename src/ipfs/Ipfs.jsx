@@ -198,8 +198,13 @@ const Ipfs = (props) => {
     }
 
     const downloadContent = async (obj) => {
+        console.log(obj)
+        let url = 'https://ipfs.io/ipfs/';
+        if(obj.servicoTipo === 3){
+            url = 'https://gateway.lighthouse.storage/ipfs/';
+        }
         await toast.promise(
-            fetch('https://ipfs.io/ipfs/' + obj.cid, {signal: AbortSignal.timeout(30000)})
+            fetch(url + obj.cid, {signal: AbortSignal.timeout(30000)})
                 .then(async res => await res.blob())
                 .then(async res => await res.text())
                 .then(res => crypto.decryptFile(res, userKey))

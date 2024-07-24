@@ -85,7 +85,7 @@ export function DiretorioAddItem({ parentId }) {
     const { novoObjeto, novoArquivo } = useContext(DiretorioContext);
     return (
         <ItemArvoreAddRoot
-            key={parentId ? 99 + parentId : 0} label={
+            key={(parentId ? 99 + parentId : 0) + ''} label={
                 <span className="actionBtns">
                     <Button onClick={() => novoObjeto(parentId)} sx={btnStyle} title="Novo diretório"
                         data-bs-toggle="modal" data-bs-target="#modalEdicaoDir">
@@ -154,7 +154,7 @@ export default function DiretorioItem({ obj, children }) {
                 children={children}
             />
         )
-    }  else if (obj.cid){
+    } else if (obj.cid){
         return (
             <ItemArvore
                 key={obj.codigo}

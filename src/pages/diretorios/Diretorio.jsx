@@ -29,7 +29,7 @@ function Diretorio() {
 
     const [listaObjetos, setListaObjetos] = useState([]);
     const [editar, setEditar] = useState(false);
-    const [arquivo, setArquivo] = useState({ codigo: "", nome: "", formato: "", parent: "", dono: "", criptografia: "", cid: "" , servico: "" });
+    const [arquivo, setArquivo] = useState({ codigo: "", nome: "", formato: "", parent: "", dono: "", cid: "" , servico: "" });
     let activeFile = null;
     const [objeto, setObjeto] = useState({ codigo: "", nome: "", parent: "", usuario: "" });
 
@@ -50,7 +50,7 @@ function Diretorio() {
 
     const novoArquivo = async (parentId) => {
         setEditar(false);
-        setArquivo({ codigo: "", nome: "", formato: "", parent: (parentId ? parentId : ""), dono: getUsuario().codigo, criptografia: "", cid: "" });
+        setArquivo({ codigo: "", nome: "", formato: "", parent: (parentId ? parentId : ""), dono: getUsuario().codigo, cid: "", servico: "" });
     }
 
     const editarArquivo = async codigo => {
