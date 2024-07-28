@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import 'react-toastify/dist/ReactToastify.css'
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import "./app.css";
+import '../node_modules/font-awesome/css/font-awesome.min.css'; 
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

@@ -54,9 +54,10 @@ function Diretorio() {
     }
 
     const editarArquivo = async codigo => {
+        console.log(codigo)
         try {
             setEditar(true);
-            setObjeto(await getArquivoServicoPorCodigoAPI(codigo));
+            setArquivo(await getArquivoServicoPorCodigoAPI(codigo));
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });

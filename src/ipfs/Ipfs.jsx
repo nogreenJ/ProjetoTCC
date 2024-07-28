@@ -17,6 +17,7 @@ const Ipfs = (props) => {
             return
         }
         pinner = servico
+        console.log(pinner)
     }
 
     const pinContent = async (content) => {
@@ -187,7 +188,7 @@ const Ipfs = (props) => {
                         {pending: 'Excluindo arquivo...'},
                         {position: "bottom-right"}
                     );
-            } else if (service.tipo == 3){
+            } else if (service.tipo === 3){
                 toast.warn("O provedor Lighthouse ainda não possui funcionalidades de unpin de arquivos, o arquivo não pôde ser removido do IPFS", {position: "bottom-right"});
                 res = {success: true}
             }

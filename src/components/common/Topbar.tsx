@@ -4,7 +4,6 @@ import sizeConfigs from "../../configs/sizeConfigs";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useState, useEffect } from "react";
-import ServicoSelect from "./servicoselect/ServicoSelect";
 
 const Topbar = () => {
   const { appState } = useSelector((state: RootState) => state.appState);
@@ -45,7 +44,6 @@ const Topbar = () => {
         <Typography variant="h6">
           {page}
         </Typography>
-        {appState === 'diretorios' && (<ServicoSelect />)}
       </Toolbar>
     </AppBar>
   );

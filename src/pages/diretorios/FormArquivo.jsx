@@ -7,6 +7,7 @@ import Dialogo from '../../components/common/Dialogo';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '@popperjs/core/dist/cjs/popper.js'
 import 'bootstrap/dist/js/bootstrap.min.js'
+import ServicoSelect from '../../components/common/servicoselect/ServicoSelect';
 
 export default function FormArquivo({ parent }) {
 
@@ -47,9 +48,18 @@ export default function FormArquivo({ parent }) {
                             ))
                         }
                     </CampoSelect>
-                    {!editar && (<FileField id="arquivoSelect" label="Arquivo" tipo="text" handlechange={handleChangeArq}
+                    {editar && (
+                        <CampoEntrada id="txtCidArq" label="CID" tipo="string"
+                        name="cid" value={arquivo.cid}
+                        handlechange={handleChangeArq}
+                        requerido={false} readonly={true}
+                        classes="w-100" width="col-md-9" />)}
+                    {!editar && (
+                        <ServicoSelect label="Serviço" classes="w-50" requerido={!editar}/>)}
+                    {!editar && (
+                        <FileField id="arquivoSelect" label="Arquivo" tipo="text" handlechange={handleChangeArq}
                         name="nome" requerido={!editar} classes="w-50" onChange={onChangeArquivo}
-                        textovalido="Arquivo OK" textoinvalido="Informe o arquivo" />)}
+                        textovalido="Arquivo OK" textoinvalido="Informe o arquivo"/>)}
                 </div>
             </Dialogo>
         </div>

@@ -1,18 +1,15 @@
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import FolderIcon from '@mui/icons-material/Folder';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import TagIcon from '@mui/icons-material/Tag';
-import UploadFileIcon from '@mui/icons-material/UploadFile';
+import { faDownload, faFile, faFileArrowUp, faFileAudio, faFileExcel, 
+    faFileImage, faFileLines, faFilePdf, faFilePowerpoint, faFileVideo, 
+    faFolder, faFolderPlus, faHashtag, faPenToSquare, faTrash } 
+    from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@mui/material/Button';
 import { styled } from "@mui/material/styles";
 import { TreeItem, treeItemClasses } from '@mui/x-tree-view/TreeItem';
 import { useContext } from 'react';
+import { toast } from 'react-toastify';
 import colorConfigs from "../../../configs/colorConfigs";
 import DiretorioContext from '../DiretorioContext';
-import { toast } from 'react-toastify';
 
 const ItemArvorePai = styled(TreeItem)(({ theme }) => ({
     [`& .${treeItemClasses.content}, .${treeItemClasses.content}`]: {
@@ -55,9 +52,8 @@ const ItemArvoreAddRoot = styled(TreeItem)(({ theme }) => ({
         backgroundColor: colorConfigs.pallette.sexta + " !important",
         borderRadius: theme.shape.borderRadius,
         fontSize: 17,
-        paddingTop: 4,
-        paddingBottom: 4,
-        marginTop: 8,
+        marginTop: 4,
+        height: 30,
         '&:hover': {
             cursor: 'default',
         },
@@ -77,23 +73,101 @@ function copyContent(content) {
     });
 }
 
+const iconMiscStyle = {
+    margin: '-7px 5px 0px 7px',
+    fontSize: "20px",
+    color: "#6c6c6c"
+}
+
+const iconDocStyle = {
+    margin: '-7px 5px 0px 7px',
+    fontSize: "20px",
+    color: "#488d9d"
+}
+
+const iconPdfStyle = {
+    margin: '-7px 5px 0px 7px',
+    fontSize: "20px",
+    color: "#cf6161"
+}
+
+const iconXlsStyle = {
+    margin: '-8px 5px 0px 7px',
+    fontSize: "20px",
+    color: "#408e28"
+}
+
+const iconSlidesStyle = {
+    margin: '-8px 5px 0px 7px',
+    fontSize: "20px",
+    color: "rgb(189 201 31)"
+}
+
+const iconMultimediaStyle = {
+    margin: '-8px 5px 0px 7px',
+    fontSize: "20px",
+    color: "rgb(160 104 177)"
+}
+
+const getTipoIcone = (tipoFile) =>{
+    tipoFile = (new String(tipoFile)).toLowerCase();
+    switch(tipoFile){
+        case ".mp3": case ".wav": case ".ogg":
+            return <FontAwesomeIcon icon={faFileAudio} style={iconMultimediaStyle} />
+        case ".mp4":case ".avi":case ".mov":
+            return <FontAwesomeIcon icon={faFileVideo} style={iconMultimediaStyle} />
+        case ".png":case ".jpg":case ".gif":
+            return <FontAwesomeIcon icon={faFileImage} style={iconMultimediaStyle} />
+        case ".pdf":
+            return <FontAwesomeIcon icon={faFilePdf} style={iconPdfStyle} />
+        case ".pptx":
+            return <FontAwesomeIcon icon={faFilePowerpoint} style={iconSlidesStyle} />
+        case ".xlsx":case ".xls":case ".ods":
+            return <FontAwesomeIcon icon={faFileExcel} style={iconXlsStyle} />
+        case ".doc":case ".docx":
+            return <FontAwesomeIcon icon={faFileLines} style={iconDocStyle} />
+        default:
+            return <FontAwesomeIcon icon={faFile} style={iconMiscStyle} />
+    }
+}
+
 const btnStyle = {
-    minWidth: 0
+    minWidth: 0,
+    width: "fit-content",
+    height: "fit-content"
+}
+
+const iconLstStyle = {
+    margin: '-7px 5px 0px 7px',
+    fontSize: "20px",
+    color: "rgb(59 59 59)"
+}
+
+const iconActionLstStyle = {
+    margin: '-7px 5px 0px 7px',
+    fontSize: "20px",
+    color: "#6c6c6c"
+}
+
+const iconActionsStyle = {
+    margin: '-7px 5px 0px 7px',
+    fontSize: "15px",
+    color: "#6c6c6c"
 }
 
 export function DiretorioAddItem({ parentId }) {
     const { novoObjeto, novoArquivo } = useContext(DiretorioContext);
     return (
-        <ItemArvoreAddRoot
+        <ItemArvoreAddRoot sx={{marginLeft: "5px"}}
             key={(parentId ? 99 + parentId : 0) + ''} label={
-                <span className="actionBtns">
+                <span>
                     <Button onClick={() => novoObjeto(parentId)} sx={btnStyle} title="Novo diretório"
                         data-bs-toggle="modal" data-bs-target="#modalEdicaoDir">
-                        <CreateNewFolderOutlinedIcon />
+                        <FontAwesomeIcon icon={faFolderPlus} style={iconActionLstStyle} />
                     </Button>
                     <Button sx={btnStyle} title="Adicionar arquivo" onClick={() => novoArquivo(parentId)}
                         data-bs-toggle="modal" data-bs-target="#modalEdicaoArq">
-                        <UploadFileIcon />
+                        <FontAwesomeIcon icon={faFileArrowUp} style={iconActionLstStyle} />
                     </Button>
                 </span>}
             nodeId={(parentId ? 99 + parentId : 0) + ''}
@@ -103,21 +177,21 @@ export function DiretorioAddItem({ parentId }) {
 
 export default function DiretorioItem({ obj, children }) {
 
-    const { editarObjeto, remover, removerArquivo, acaoDownloadArquivo } = useContext(DiretorioContext);
+    const { editarObjeto, editarArquivo, remover, removerArquivo, acaoDownloadArquivo } = useContext(DiretorioContext);
 
     const dirLabel = <div onClick={event => event.stopPropagation()}>
         <div>
-            <FolderIcon sx={{ margin: '-7px 5px -6px 0' }} />
-            {obj.nome}
-            <span className="actionBtns">
+            <FontAwesomeIcon icon={faFolder} style={iconLstStyle} />
+            <label sx={{marginRight:"20px"}}>{obj.nome}</label>
+            <span className="actionBtns" sx={{paddingLeft: "30px"}}>
                 <Button className="btn btn-sm" title="Editar"
                     onClick={() => editarObjeto(obj.codigo)} sx={btnStyle}
                     data-bs-toggle="modal" data-bs-target="#modalEdicaoDir">
-                    <BorderColorOutlinedIcon />
+                    <FontAwesomeIcon icon={faPenToSquare} style={iconActionLstStyle}/>
                 </Button>
                 <Button className="btn btn-sm" title="Remover" sx={btnStyle}
                     onClick={() => { remover(obj.codigo); }}>
-                    <DeleteOutlineOutlinedIcon />
+                    <FontAwesomeIcon icon={faTrash} style={iconActionLstStyle}/>
                 </Button>
             </span>
         </div>
@@ -125,20 +199,24 @@ export default function DiretorioItem({ obj, children }) {
 
     const arqLabel = <div onClick={event => event.stopPropagation()}>
         <div>
-            <InsertDriveFileIcon sx={{ margin: '-7px 5px -6px 0' }} />
-            {obj.nome}{obj.formato}
-            <span className="actionBtns">
+            {getTipoIcone(obj.formato)}
+            <label>{obj.nome}{obj.formato}</label>
+            <span className="actionBtns" sx={{paddingLeft: "30px"}}>
                 <Button className="btn btn-sm" title="Baixar" sx={btnStyle}
                         onClick={() => { acaoDownloadArquivo(obj); }}>
-                    <FileDownloadIcon />
+                    <FontAwesomeIcon icon={faDownload} style={iconActionsStyle}/>
                 </Button>
                 <Button className="btn btn-sm" title="Copiar CID" sx={btnStyle}
                         onClick={() => { copyContent(obj.cid); }}>
-                    <TagIcon />
+                    <FontAwesomeIcon icon={faHashtag} style={iconActionsStyle}/>
+                </Button>
+                <Button className="btn btn-sm" title="Editar arquivo" sx={btnStyle}
+                    onClick={() => { editarArquivo(obj.codigo); }} data-bs-toggle="modal" data-bs-target="#modalEdicaoArq">
+                    <FontAwesomeIcon icon={faPenToSquare} style={iconActionsStyle}/>
                 </Button>
                 <Button className="btn btn-sm" title="Remover arquivo" sx={btnStyle}
                     onClick={() => { removerArquivo(obj.codigo, obj.cid, obj.servico); }}>
-                    <DeleteOutlineOutlinedIcon />
+                    <FontAwesomeIcon icon={faTrash} style={iconActionsStyle}/>
                 </Button>
             </span>
         </div>
@@ -154,7 +232,7 @@ export default function DiretorioItem({ obj, children }) {
                 children={children}
             />
         )
-    } else if (obj.cid){
+    } else if (obj.cid || obj.servico){
         return (
             <ItemArvore
                 key={obj.codigo}

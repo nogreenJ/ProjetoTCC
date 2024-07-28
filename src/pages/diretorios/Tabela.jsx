@@ -13,10 +13,20 @@ const theme = createTheme({
                     ".MuiTreeItem-label": {
                         fontSize: "20px"
                     },
+                    ".MuiCollapse-root": {
+                        marginLeft: "43px !important",
+                        borderLeft: "dashed lightgrey 2px"
+                    },
                     "button": {
                         padding: 0,
                         fontSize: "15px",
-                        color: "grey"
+                        marginLeft: "-5px",
+                        marginTop: "-4px",
+                        height: "25px",
+                        paddingTop: "7px",
+                    },
+                    ".actionBtns": {
+                        paddingLeft: "20px !important"
                     }
                 }
             }

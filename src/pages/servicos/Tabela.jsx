@@ -1,15 +1,16 @@
 import { useContext } from "react";
 import ServicoContext from "./ServicoContext";
-import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
-import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import AddIcon from '@mui/icons-material/Add';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare} from '@fortawesome/free-solid-svg-icons';
+import { faPlus} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 function Tabela() {
 
     const { listaObjetos, remover, novoObjeto, editarObjeto } = useContext(ServicoContext);
 
     const btnStyle = {
-        fontSize: 20,
+        fontSize: 15,
         color: 'white',
     }
     return (
@@ -30,14 +31,16 @@ function Tabela() {
                             <td>{objeto.nome}</td>
                             <td>{objeto.tipo}</td>
                             <td align="center">
-                                <button className="btn btn-info" title="Editar"
-                                    onClick={() => editarObjeto(objeto.codigo)}
+                                <button className="btn" title="Editar"
+                                    onClick={() => editarObjeto(objeto.codigo)} 
+                                    style={{margin: "0 5px", backgroundColor: "#4d7ebb"}}
                                     data-bs-toggle="modal" data-bs-target="#modalEdicao">
-                                    <BorderColorOutlinedIcon sx={btnStyle} />
+                                    <FontAwesomeIcon icon={faPenToSquare} style={btnStyle}/>
                                 </button>
-                                <button className="btn btn-danger" title="Remover"
+                                <button className="btn" title="Remover" 
+                                    style={{margin: "0 10px", backgroundColor: "#ff3434"}}
                                     onClick={() => { remover(objeto.codigo); }}>
-                                    <DeleteOutlineOutlinedIcon sx={btnStyle} />
+                                    <FontAwesomeIcon icon={faTrash} style={btnStyle}/>
                                 </button>
                             </td>
                         </tr>
@@ -47,10 +50,11 @@ function Tabela() {
                         <td></td>
                         <td></td>
                         <td align="center">
-                            <button type="button" className="btn btn-primary" title="Novo"
+                            <button type="button" className="btn" title="Novo"
+                                style={{backgroundColor: "rgb(28 161 69)"}}
                                 data-bs-toggle="modal" data-bs-target="#modalEdicao"
                                 onClick={() => novoObjeto()}>
-                                <AddIcon sx={btnStyle} />
+                                <FontAwesomeIcon icon={faPlus} style={btnStyle}/>
                             </button>
                         </td>
                     </tr>

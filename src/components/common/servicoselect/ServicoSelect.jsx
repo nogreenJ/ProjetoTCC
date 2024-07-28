@@ -43,18 +43,41 @@ const ServicoSelect = (props, ref) => {
         <ServicoSelectContext.Provider value={{
             getServicoByCodigo, refresh
         }}>
-            <select
-                className="form-select" readOnly id="servico" name="servico"
-                style={{ width: 200, marginLeft: 'auto', marginRight: 0 }} onChange={(e) => onChange(e)}>
-                <option value=''>Sem serviço</option>
-                {
-                    servicos.map((ser) => (
-                        <option key={ser.codigo} value={ser.codigo}>
-                            {ser.nome}
-                        </option>
-                    ))
-                }
-            </select>
+            
+        <div className="form-group" style={{ margin: '5px 0 5px 0' }}>
+            <div className="row">
+                <span className="col-md-12" style={{ display: 'flex' }}>
+                    <label htmlFor={props.id}
+                        className={(props.labelClasses ? props.labelClasses : "") + " col-md-2 form-label"}
+                        style={{ justifyContent: 'right', display: 'flex', padding: '6px 6px 0 0' }}>
+                        {props.label}
+                    </label>
+                    <span className={props.width ? props.width : "col-md-8"}>
+                        <select
+                            value={props.value}
+                            required={props.requerido}
+                            className={(props.classes ? props.classes : "") + " form-select"}
+                            readOnly id="servico" name="servico"
+                            style={{}} onChange={(e) => onChange(e)}>
+                            <option value=''>Sem serviço</option>
+                            {
+                                servicos.map((ser) => (
+                                    <option key={ser.codigo} value={ser.codigo}>
+                                        {ser.nome}
+                                    </option>
+                                ))
+                            }
+                        </select>
+                    </span>
+                </span>
+                <div className="valid-feedback">
+                    {props.textovalido}
+                </div>
+                <div className="invalid-feedback">
+                    {props.textoinvalido}
+                </div>
+            </div>
+        </div>
         </ServicoSelectContext.Provider>
     )
 }
