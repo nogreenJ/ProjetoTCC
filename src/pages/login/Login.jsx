@@ -9,7 +9,7 @@ import assets from "../../assets";
 import Carregando from "../../components/common/Carregando";
 import MainLayout from "../../components/layout/MainLayout";
 import crypto from "../../crypto";
-import { getToken, gravaAutenticacao } from "../../seguranca/Autenticacao";
+import { getToken, gravaAutenticacao, validatePassword } from "../../seguranca/Autenticacao";
 import { useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import './signin.css';
@@ -61,7 +61,6 @@ function Login() {
                 }
             });
         } catch (err) {
-            console.log(err)
             toast.error(err.message, {
                 position: "bottom-right"
             });
@@ -71,6 +70,9 @@ function Login() {
     }
 
     const acaoCadastro = async () => {
+        if(!validatePassword(senha)){
+            return;
+        }
         try {
             const body = {
                 nome: nome,
@@ -91,9 +93,6 @@ function Login() {
                         });
                     } else {
                         if(json.status === "warning"){
-                            console.log("json")
-                            console.log(json)
-                            console.log(json.status === "warning")
                             toast.warn(json.msg, {
                                 position: "bottom-right"
                             });

@@ -3,7 +3,7 @@ import ConfiguracoesContext from "./ConfiguracoesContext";
 import { getUsuarioServicoPorCodigoAPI, cadastraUsuarioServico } from '../../servicos/UsuarioServico';
 import Carregando from "../../components/common/Carregando";
 import WithAuth from "../../seguranca/WithAuth";
-import { logout, getUsuario } from "../../seguranca/Autenticacao";
+import { logout, getUsuario, validatePassword } from "../../seguranca/Autenticacao";
 import Form from "./Form";
 import { toast } from "react-toastify";
 import crypto from "../../crypto";
@@ -32,12 +32,26 @@ function Configuracoes() {
         }
     }
 
-    const salvarDados = async () => {
+    const salvarDados = async (e) => {
+        e.preventDefault();
         const user = objeto;
-        if(user.novaSenha){
-            user.sc_key = crypto.encryptKey(user.sc_key, user.novaSenha);
+        if(!validatePassword(user.novaSenha, user.senha)){
+            return;
         }
-        cadastraUsuarioServico(user, 'PUT')
+        if(user.novaSenha){
+            user.sc_key = crypto.encryptKey(userKey, user.novaSenha);
+        }
+        const ret = await cadastraUsuarioServico(user, 'PUT')
+        if(ret.status === "success"){
+            toast.success(ret.message, {
+                position: "bottom-right"
+            });
+            getUsuarioObj();
+        } else {
+            toast.error(ret.message, {
+                position: "bottom-right"
+            });
+        }
     }
 
     const sair = async () => {

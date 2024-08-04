@@ -19,7 +19,7 @@ import FormDiretorio from "./FormDiretorio";
 import Tabela from "./Tabela";
 import DiretorioItem, { DiretorioAddItem } from "./arvore/DiretorioItem";
 import { confirmAlert } from 'react-confirm-alert';
-
+import $ from 'jquery';
 
 function Diretorio() {
 
@@ -54,7 +54,6 @@ function Diretorio() {
     }
 
     const editarArquivo = async codigo => {
-        console.log(codigo)
         try {
             setEditar(true);
             setArquivo(await getArquivoServicoPorCodigoAPI(codigo));
@@ -114,6 +113,7 @@ function Diretorio() {
             if (!editar) {
                 setEditar(true);
             }
+            $("#formEdicaoDir_closebtn").trigger("click");
         } catch (err) {
             toast.error(err, {
                 position: "bottom-right"
@@ -156,6 +156,7 @@ function Diretorio() {
                             setEditar(true);
                             recuperaDiretorios();
                             novoArquivo(arquivo.parent);
+                            $("#formEdicaoArq_closebtn").trigger("click");
                         } else {
                             toast.error("Erro ao tentar fazer upload do arquivo", {
                                 position: "bottom-right"

@@ -1,7 +1,8 @@
 {
-  "name": "projetotcc",
+  "name": "syphonipfs",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://syphonipfs.io",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -30,6 +31,7 @@
     "fs": "^0.0.1-security",
     "jquery": "^3.7.1",
     "jwt-decode": "^3.1.2",
+    "password-validator": "^5.3.0",
     "process": "^0.11.10",
     "react": "^18.2.0",
     "react-app-rewired": "^2.2.1",

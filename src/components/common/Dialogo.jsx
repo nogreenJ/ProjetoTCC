@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button';
+import $ from 'jquery';
 
 function Dialogo(props) {
 
@@ -11,7 +12,6 @@ function Dialogo(props) {
                     event.preventDefault()
                     event.stopPropagation()
                 }
-
                 form.classList.add('was-validated')
             }, false)
         })
@@ -23,7 +23,7 @@ function Dialogo(props) {
                 <div className="modal-content">
                     <div className="modal-header">
                         <h5 className="modal-title" id="exampleModalLabel">{props.titulo}</h5>
-                        <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" className="btn-close" id={props.idformulario + "_closebtn"} data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <form id={props.idformulario} onSubmit={props.acaoCadastrar} className="needs-validation">
                         <div className="modal-body">

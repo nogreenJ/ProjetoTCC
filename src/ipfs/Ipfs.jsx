@@ -17,7 +17,6 @@ const Ipfs = (props) => {
             return
         }
         pinner = servico
-        console.log(pinner)
     }
 
     const pinContent = async (content) => {
@@ -86,7 +85,6 @@ const Ipfs = (props) => {
                     const filebaseClient = new FilebaseClient({ token: key })
                     await toast.promise(
                         await filebaseClient.storeBlob(fileEnc).then(cid => {
-                            console.log(cid)
                             if(!cid){
                                 toast.warn("Credenciais inválidas, verifique a chave de API do serviço " + pinner.codigo, {
                                     position: "bottom-right"
@@ -103,6 +101,7 @@ const Ipfs = (props) => {
                         res.cid = null;
                     });
                 }
+                //Lighthouse
                 else if (pinner.tipo === 3){
                     await toast.promise(
                         lighthouse.upload([new File([fileEnc], content.nome)], key, false, null).then(ret => {
@@ -121,13 +120,11 @@ const Ipfs = (props) => {
                         toast.error(err, {position: "bottom-right"});
                         res.cid = null;
                     });
-                    console.log(res)
                     return res;
                 }
             }
             return {};
         } catch (e) {
-            console.log(e)
             return e
         }
     }
@@ -199,7 +196,6 @@ const Ipfs = (props) => {
     }
 
     const downloadContent = async (obj) => {
-        console.log(obj)
         let url = 'https://ipfs.io/ipfs/';
         if(obj.servicoTipo === 3){
             url = 'https://gateway.lighthouse.storage/ipfs/';
