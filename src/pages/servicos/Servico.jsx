@@ -15,6 +15,7 @@ import ServicoContext from "./ServicoContext";
 import Tabela from "./Tabela";
 import { toast } from "react-toastify";
 import { confirmAlert } from "react-confirm-alert";
+import $ from 'jquery';
 
 function Servico() {
 
@@ -54,20 +55,24 @@ function Servico() {
             let servico = objeto;
             servico.key = crypto.encryptKey(servico.key, userKey);
             let retornoAPI = await cadastraServicoServico(servico, metodo);
-            toast.success(retornoAPI.message, {
-                position: "bottom-right"
-            });
-            setObjeto(retornoAPI.objeto);
-            if (!editar) {
-                setEditar(true);
+            if(retornoAPI.status === "success"){
+                toast.success(retornoAPI.message, {
+                    position: "bottom-right"
+                });
+                setObjeto(retornoAPI.objeto);
+                if (!editar) {
+                    setEditar(true);
+                }
+                $("#formEdicao_closebtn").click();
+            } else {
+                toast.error(retornoAPI.message, {
+                    position: "bottom-right"
+                });
             }
         } catch (err) {
             console.log(err);
         }
-        //$(e.target).hide();
         recuperaServicos();
-        //window.location.reload();
-        //navigate("/servicos", { replace: true });
     }
 
     const recuperaServicos = async () => {

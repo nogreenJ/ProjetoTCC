@@ -106,14 +106,20 @@ function Diretorio() {
         const metodo = editar ? "PUT" : "POST";
         try {
             let retornoAPI = await cadastraDiretorioServico(objeto, metodo);
-            toast.success(retornoAPI.message, {
-                position: "bottom-right"
-            });
-            setObjeto(retornoAPI.objeto);
-            if (!editar) {
-                setEditar(true);
+            if(retornoAPI.status === "success"){
+                toast.success(retornoAPI.message, {
+                    position: "bottom-right"
+                });
+                setObjeto(retornoAPI.objeto);
+                if (!editar) {
+                    setEditar(true);
+                }
+                $("#formEdicaoDir_closebtn").click();
+            } else {
+                toast.error(retornoAPI.message, {
+                    position: "bottom-right"
+                });
             }
-            $("#formEdicaoDir_closebtn").trigger("click");
         } catch (err) {
             toast.error(err, {
                 position: "bottom-right"
@@ -149,14 +155,19 @@ function Diretorio() {
                             arq.servico = ret.servico;
                             arq.dono = getUsuario().codigo;
                             let retornoAPI = await cadastraArquivoServico(arq, metodo);
-                            toast.success("Upload realizado!", {
-                                position: "bottom-right"
-                            });
-                            //setObjeto(retornoAPI.objeto);
-                            setEditar(true);
-                            recuperaDiretorios();
-                            novoArquivo(arquivo.parent);
-                            $("#formEdicaoArq_closebtn").trigger("click");
+                            if(retornoAPI.status === "success"){
+                                toast.success("Upload realizado!", {
+                                    position: "bottom-right"
+                                });
+                                setEditar(true);
+                                recuperaDiretorios();
+                                novoArquivo(arquivo.parent);
+                                $("#formEdicaoArq_closebtn").click();
+                            } else {
+                                toast.error(retornoAPI.message, {
+                                    position: "bottom-right"
+                                });
+                            }
                         } else {
                             toast.error("Erro ao tentar fazer upload do arquivo", {
                                 position: "bottom-right"
@@ -165,9 +176,17 @@ function Diretorio() {
                     });                
             } else {
                 let retornoAPI = await cadastraArquivoServico(arquivo, metodo);
-                toast.success(retornoAPI.message, {
-                    position: "bottom-right"
-                });
+                if(retornoAPI.status === "success"){
+                    $("#formEdicaoArq_closebtn").click();
+                    toast.success("Arquivo atualizado com sucesso!", {
+                        position: "bottom-right"
+                    });
+                    recuperaDiretorios();
+                } else {
+                    toast.error(retornoAPI.message, {
+                        position: "bottom-right"
+                    });
+                }
                 setObjeto(retornoAPI.objeto);
                 recuperaDiretorios();
             }
