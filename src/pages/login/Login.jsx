@@ -87,22 +87,23 @@ function Login() {
                 body: JSON.stringify(body)
             }).then(response => response.json())
                 .then(json => {
-                    if (json.success === false) {
+                    if(json.status === "error"){
                         toast.error(json.message, {
                             position: "bottom-right"
                         });
-                    } else {
-                        if(json.status === "warning"){
-                            toast.warn(json.msg, {
-                                position: "bottom-right"
-                            });
-                            return;
-                        }
-                        toast.success("Cadastro realizado!", {
+                        return;
+                    }
+                    if(json.status === "warning"){
+                        toast.warn(json.message, {
                             position: "bottom-right"
                         });
-                        changeAcao();
+                        return;
                     }
+                    toast.success("Cadastro realizado!", {
+                        position: "bottom-right"
+                    });
+                    changeAcao();
+                    
                 })
         } catch (err) {
             toast.error(err.message, {

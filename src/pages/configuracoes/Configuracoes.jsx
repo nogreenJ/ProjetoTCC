@@ -43,12 +43,12 @@ function Configuracoes() {
         }
         const ret = await cadastraUsuarioServico(user, 'PUT')
         if(ret.status === "success"){
-            toast.success(ret.message, {
+            toast.success("Usuário atualizado", {
                 position: "bottom-right"
             });
             getUsuarioObj();
         } else {
-            toast.error(ret.message, {
+            toast.error("Erro ao atualizar dados do usuário", {
                 position: "bottom-right"
             });
         }

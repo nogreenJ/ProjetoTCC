@@ -5,6 +5,7 @@ import { getServicoServico } from "../../../servicos/ServicoServico";
 import { getUserKey } from "../../../seguranca/Autenticacao";
 import IpfsContext from "../../../ipfs/IpfsContext";
 import crypto from "../../../crypto";
+import { toast } from "react-toastify";
 
 const ServicoSelect = (props, ref) => {
 
@@ -32,7 +33,15 @@ const ServicoSelect = (props, ref) => {
     }
 
     const refresh = async () => {
-        await getServicoServico().then(res => setServicos(res));
+        await getServicoServico().then(res => {
+            if(res.status && res.status !== "success"){
+                toast.error("Erro ao buscar serviços para o seletor",{
+                        position: "bottom-right"
+                });
+            } else {
+                setServicos(res)
+            }
+        });
     }
 
     useEffect(() => {

@@ -116,7 +116,7 @@ const getTipoIcone = (tipoFile) =>{
             return <FontAwesomeIcon icon={faFileAudio} style={iconMultimediaStyle} />
         case ".mp4":case ".avi":case ".mov":
             return <FontAwesomeIcon icon={faFileVideo} style={iconMultimediaStyle} />
-        case ".png":case ".jpg":case ".gif":
+        case ".png":case ".jpg":case ".gif":case ".webp":
             return <FontAwesomeIcon icon={faFileImage} style={iconMultimediaStyle} />
         case ".pdf":
             return <FontAwesomeIcon icon={faFilePdf} style={iconPdfStyle} />

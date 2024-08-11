@@ -41,7 +41,14 @@ function Diretorio() {
     const editarObjeto = async codigo => {
         try {
             setEditar(true);
-            setObjeto(await getDiretorioServicoPorCodigoAPI(codigo));
+            const obj = await getDiretorioServicoPorCodigoAPI(codigo);
+            if(obj && obj.codigo){
+                setObjeto(obj);
+            } else {
+                toast.error("Erro ao buscar diretório", {
+                    position: "bottom-right"
+                });
+            }
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
@@ -56,7 +63,14 @@ function Diretorio() {
     const editarArquivo = async codigo => {
         try {
             setEditar(true);
-            setArquivo(await getArquivoServicoPorCodigoAPI(codigo));
+            const arq = await getDiretorioServicoPorCodigoAPI(codigo);
+            if(arq && arq.codigo){
+                setArquivo(arq);
+            } else {
+                toast.error("Erro ao buscar arquivo", {
+                    position: "bottom-right"
+                });
+            }
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
@@ -164,7 +178,7 @@ function Diretorio() {
                                 novoArquivo(arquivo.parent);
                                 $("#formEdicaoArq_closebtn").click();
                             } else {
-                                toast.error(retornoAPI.message, {
+                                toast.error("Erro ao criar arquivo", {
                                     position: "bottom-right"
                                 });
                             }
@@ -183,7 +197,7 @@ function Diretorio() {
                     });
                     recuperaDiretorios();
                 } else {
-                    toast.error(retornoAPI.message, {
+                    toast.error("Erro ao atualizar arquivo", {
                         position: "bottom-right"
                     });
                 }
@@ -214,6 +228,9 @@ function Diretorio() {
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
+            toast.error("Erro ao buscar diretórios", {
+                position: "bottom-right"
+            });
         }
     }
 
@@ -227,10 +244,16 @@ function Diretorio() {
                     label: 'Sim',
                     onClick: async () => {
                         let retornoAPI = await deleteDiretorioServico(codigo);
-                        toast.success(retornoAPI.message, {
-                            position: "bottom-right"
-                        });
-                        recuperaDiretorios();
+                        if(retornoAPI.status === "success"){
+                            toast.success("Diretório removido com sucesso", {
+                                position: "bottom-right"
+                            });
+                            recuperaDiretorios();
+                        } else {
+                            toast.error("Erro ao deletar diretório", {
+                                position: "bottom-right"
+                            });
+                        }
                     }
                   },
                   {
@@ -242,9 +265,9 @@ function Diretorio() {
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
-            /*toast.success(retornoAPI.message, {
+            toast.error("Erro ao deletar diretório", {
                 position: "bottom-right"
-            });*/
+            });
         }
     }
 
@@ -262,10 +285,16 @@ function Diretorio() {
                             .then( async res => {
                                 if(res.success){
                                     let retornoAPI = await deleteArquivoServico(codigo);
-                                    toast.success(retornoAPI.message, {
-                                        position: "bottom-right"
-                                    });
-                                    recuperaDiretorios();
+                                    if(retornoAPI.status === "success"){
+                                        toast.success(retornoAPI.message, {
+                                            position: "bottom-right"
+                                        });
+                                        recuperaDiretorios();
+                                    } else {
+                                        toast.error("Erro ao deletar arquivo", {
+                                            position: "bottom-right"
+                                        });
+                                    }
                                 } else {
                                     toast.error("Erro ao deletar arquivo", {
                                         position: "bottom-right"
@@ -283,6 +312,9 @@ function Diretorio() {
         } catch (err) {
             window.location.reload();
             navigate("/", { replace: true });
+            toast.error("Erro ao deletar arquivo", {
+                position: "bottom-right"
+            });
         }
     }
 

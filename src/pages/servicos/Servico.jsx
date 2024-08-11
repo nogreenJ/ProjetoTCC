@@ -36,14 +36,23 @@ function Servico() {
         try {
             setEditar(true);
             const objEdt = await getServicoServicoPorCodigoAPI(codigo);
-            if(objEdt.sc_key){
-                objEdt.sc_key = crypto.decryptKey(objEdt.sc_key, userKey);
+            if(objEdt && objEdt.codigo){
+                if(objEdt.sc_key){
+                    objEdt.sc_key = crypto.decryptKey(objEdt.sc_key, userKey);
+                }
+                objEdt.key = crypto.decryptKey(objEdt.key, userKey);
+                setObjeto(objEdt);
+            } else {
+                toast.error("Erro ao buscar serviço", {
+                    position: "bottom-right"
+                });
             }
-            objEdt.key = crypto.decryptKey(objEdt.key, userKey);
-            setObjeto(objEdt);
         } catch (err) {
             window.location.reload();
             navigate("/servicos", { replace: true });
+            toast.error("Erro ao buscar serviço", {
+                position: "bottom-right"
+            });
         }
     }
 
@@ -56,7 +65,7 @@ function Servico() {
             servico.key = crypto.encryptKey(servico.key, userKey);
             let retornoAPI = await cadastraServicoServico(servico, metodo);
             if(retornoAPI.status === "success"){
-                toast.success(retornoAPI.message, {
+                toast.success("Serviço cadastrado com sucesso", {
                     position: "bottom-right"
                 });
                 setObjeto(retornoAPI.objeto);
@@ -65,7 +74,7 @@ function Servico() {
                 }
                 $("#formEdicao_closebtn").click();
             } else {
-                toast.error(retornoAPI.message, {
+                toast.error("Erro ao cadastrar serviço", {
                     position: "bottom-right"
                 });
             }
@@ -101,10 +110,16 @@ function Servico() {
                     label: 'Sim',
                     onClick: async () => {
                         let retornoAPI = await deleteServicoServico(codigo);
-                        toast.success(retornoAPI.message, {
-                            position: "bottom-right"
-                        });
-                        recuperaServicos();
+                        if(retornoAPI.status === "success"){
+                            toast.success("Serviço deletado com sucesso", {
+                                position: "bottom-right"
+                            });
+                            recuperaServicos();
+                        } else {
+                            toast.error("Erro ao deletar serviço", {
+                                position: "bottom-right"
+                            });
+                        }
                     }
                   },
                   {
