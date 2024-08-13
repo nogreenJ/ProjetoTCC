@@ -64,7 +64,7 @@ function Servico() {
             let servico = objeto;
             servico.key = crypto.encryptKey(servico.key, userKey);
             let retornoAPI = await cadastraServicoServico(servico, metodo);
-            if(retornoAPI.status === "success"){
+            if(retornoAPI.status !== "error"){
                 toast.success("Serviço cadastrado com sucesso", {
                     position: "bottom-right"
                 });
