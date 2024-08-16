@@ -28,7 +28,7 @@ function Informacoes() {
             </p>
             <p style={paragraph}>
                 Para começar, na seção serviços você pode cadastrar <a style={aStyle} href="/servicos" target="_blank">serviços</a> de pinning, a funcionalidade de persistência de dados do 
-                IPFS, podendo escolher entre os provedores <a style={aStyle} href="https://www.pinata.cloud" target="_blank">Piñata</a> e <a style={aStyle} href="https://filebase.com" target="_blank">Filebase</a>, 
+                IPFS, podendo escolher entre os provedores <a style={aStyle} href="https://www.pinata.cloud" target="_blank">Piñata</a> e <a style={aStyle} href="https://files.lighthouse.storage" target="_blank">Lighthouse</a>, 
                 e em seguida, na seção <a style={aStyle} href="/" target="_blank">diretórios</a>, você pode montar uma estrutura de diretórios e subdiretórios, assim como realizar o upload de arquivos, que serão 
                 criptografados e descriptografados utilizando uma chave privada que apenas você pode ver na seção de <a style={aStyle} href="/config" target="_blank">configurações</a>, onde você também poderá 
                 alterar alguns dados de sua conta.
